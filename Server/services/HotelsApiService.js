@@ -12,7 +12,7 @@ const HotelsApiService = {
                         .send(requestData)
                         .end().exec();
 
-        return hotels;
+        return hotels.data.body.searchResults.results;
     }
 }
 
