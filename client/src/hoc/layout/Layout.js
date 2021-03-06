@@ -1,10 +1,14 @@
 import React, { Component } from "react";
+import Menu from "../../features/home/menu";
 
 class Layout extends Component {
   render() {
     return (
       <div>
-        <main>{this.props.children}</main>
+        <Menu></Menu>
+        <main>
+          {this.props.children}
+        </main>
       </div>
     );
   }
