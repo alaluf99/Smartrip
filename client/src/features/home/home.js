@@ -1,12 +1,11 @@
-import React, { createRef } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Menu from './menu';
-import homeBackgroundImage from './../../images/home-background.jpeg';
 import Button from '@material-ui/core/Button';
-import FinishPlan from '../plan/plan-finish';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
+import homeBackgroundImage from './../../images/home-background.jpeg';
+import Suggestions from './suggestions';
 
 const useStyles = makeStyles((theme) => ({
     text: {
@@ -41,11 +40,9 @@ const useStyles = makeStyles((theme) => ({
 
 export function Home() {
     const classes = useStyles();
-    const ref = createRef();
 
     return (
         <div>
-            <Menu></Menu>
             <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(${homeBackgroundImage})` }}>
                 {<img style={{ display: 'none' }} src={homeBackgroundImage} />}
                 <div className={classes.overlay} />
@@ -58,7 +55,7 @@ export function Home() {
                             <Typography variant="h5" className={classes.text} color="inherit" paragraph>
                                 Plan vacation in five minutes
             </Typography>
-                            <Button variant="outlined" className={classes.text} color="inherit" href="#finishPlan">
+                            <Button variant="outlined" className={classes.text} color="inherit" href="planning">
                                 start planning
 </Button>
 
@@ -67,7 +64,7 @@ export function Home() {
                     </Grid>
                 </Grid>
             </Paper>
-            <FinishPlan />
+            <Suggestions />
         </div>
     );
 }
