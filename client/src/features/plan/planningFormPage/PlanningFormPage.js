@@ -1,294 +1,195 @@
-import React, { Component } from "react";
-import { Form, Field } from "react-final-form";
-import { TextField, Checkbox, Radio, Select } from "final-form-material-ui";
+import React, { useState } from "react";
+import { Form } from "react-final-form";
 import {
-  Typography,
   Paper,
-  Link,
   Grid,
   Button,
   CssBaseline,
-  RadioGroup,
-  FormLabel,
-  MenuItem,
-  FormGroup,
-  FormControl,
-  FormControlLabel,
+  ButtonGroup,
+  Slider,
 } from "@material-ui/core";
-// Picker
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  TimePicker,
-  DatePicker,
+  KeyboardDatePicker,
 } from "@material-ui/pickers";
 
-function DatePickerWrapper(props) {
-  const {
-    input: { name, onChange, value, ...restInput },
-    meta,
-    ...rest
-  } = props;
-  const showError =
-    ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
-    meta.touched;
+import "./planning-form-page.css";
+
+export default function PlanningFormPage() {
+  const [startDate, setStartDate] = React.useState();
+  const [endDate, setEndDate] = React.useState();
+
+  const [numberOfTravelers, setNumberOfTravelers] = React.useState(0);
+  const [numberOfRooms, setNumberOfRooms] = React.useState(0);
+
+  const onSubmit = async (values) => {
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(300);
+    window.alert(JSON.stringify(values, 0, 2));
+  };
+
+  const validate = (values) => {
+    const errors = {};
+    if (!values.firstName) {
+      errors.firstName = "Required";
+    }
+    if (!values.lastName) {
+      errors.lastName = "Required";
+    }
+    if (!values.email) {
+      errors.email = "Required";
+    }
+    return errors;
+  };
+
+  const displayCounter = numberOfTravelers > -1;
 
   return (
-    <DatePicker
-      {...rest}
-      name={name}
-      helperText={showError ? meta.error || meta.submitError : undefined}
-      error={showError}
-      inputProps={restInput}
-      onChange={onChange}
-      value={value === "" ? null : value}
-    />
-  );
-}
-
-function TimePickerWrapper(props) {
-  const {
-    input: { name, onChange, value, ...restInput },
-    meta,
-    ...rest
-  } = props;
-  const showError =
-    ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
-    meta.touched;
-
-  return (
-    <TimePicker
-      {...rest}
-      name={name}
-      helperText={showError ? meta.error || meta.submitError : undefined}
-      error={showError}
-      inputProps={restInput}
-      onChange={onChange}
-      value={value === "" ? null : value}
-    />
-  );
-}
-
-const onSubmit = async (values) => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await sleep(300);
-  window.alert(JSON.stringify(values, 0, 2));
-};
-const validate = (values) => {
-  const errors = {};
-  if (!values.firstName) {
-    errors.firstName = "Required";
-  }
-  if (!values.lastName) {
-    errors.lastName = "Required";
-  }
-  if (!values.email) {
-    errors.email = "Required";
-  }
-  return errors;
-};
-class PlanningFormPage extends Component {
-  render() {
-    return (
-      <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
-        <CssBaseline />
-        <Form
-          onSubmit={onSubmit}
-          initialValues={{ employed: true, stooge: "larry" }}
-          validate={validate}
-          render={({ handleSubmit, reset, submitting, pristine, values }) => (
-            <form onSubmit={handleSubmit} noValidate>
-              <Paper style={{ padding: 16 }}>
-                <Grid container alignItems="flex-start" spacing={2}>
-                  <Grid item xs={6}>
-                    <Field
-                      fullWidth
-                      required
-                      name="firstName"
-                      component={TextField}
-                      type="text"
-                      label="First Name"
+    <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
+      <CssBaseline />
+      <Form
+        onSubmit={onSubmit}
+        initialValues={{ employed: true, stooge: "larry" }}
+        validate={validate}
+        render={({ handleSubmit, reset, submitting, pristine, values }) => (
+          <form onSubmit={handleSubmit} noValidate>
+            <Paper style={{ padding: 16 }}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <div className="grid">
+                  <h2 className="dates">Trip dates</h2>
+                  <div className="cell">
+                    <KeyboardDatePicker
+                      disableToolbar
+                      name="datee"
+                      variant="inline"
+                      format="MM/dd/yyyy"
+                      margin="normal"
+                      id="travel start date"
+                      label="travel start date"
+                      value={startDate}
+                      onChange={(date) => {
+                        setStartDate(date);
+                        console.log("blaaaaa");
+                      }}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                      className="date-picker"
                     />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Field
-                      fullWidth
-                      required
-                      name="lastName"
-                      component={TextField}
-                      type="text"
-                      label="Last Name"
+
+                    <KeyboardDatePicker
+                      disableToolbar
+                      name="datee"
+                      variant="inline"
+                      format="MM/dd/yyyy"
+                      margin="normal"
+                      id="travel start date"
+                      label="travel start date"
+                      value={endDate}
+                      onChange={(date) => {
+                        setEndDate(date);
+                        console.log("blaaaaa");
+                      }}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                      className="date-picker"
                     />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Field
-                      name="email"
-                      fullWidth
-                      required
-                      component={TextField}
-                      type="email"
-                      label="Email"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      label="Employed"
-                      control={
-                        <Field
-                          name="employed"
-                          component={Checkbox}
-                          type="checkbox"
-                        />
+                  </div>
+
+                  <h2>Number of travellers</h2>
+                  <ButtonGroup
+                    size="small"
+                    className="travelers"
+                    aria-label="small outlined button group"
+                  >
+                    <Button
+                      onClick={() =>
+                        setNumberOfTravelers(numberOfTravelers + 1)
                       }
-                    />
-                  </Grid>
-                  <Grid item>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Best Stooge</FormLabel>
-                      <RadioGroup row>
-                        <FormControlLabel
-                          label="Larry"
-                          control={
-                            <Field
-                              name="stooge"
-                              component={Radio}
-                              type="radio"
-                              value="larry"
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label="Moe"
-                          control={
-                            <Field
-                              name="stooge"
-                              component={Radio}
-                              type="radio"
-                              value="moe"
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label="Curly"
-                          control={
-                            <Field
-                              name="stooge"
-                              component={Radio}
-                              type="radio"
-                              value="curly"
-                            />
-                          }
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                  <Grid item>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Sauces</FormLabel>
-                      <FormGroup row>
-                        <FormControlLabel
-                          label="Ketchup"
-                          control={
-                            <Field
-                              name="sauces"
-                              component={Checkbox}
-                              type="checkbox"
-                              value="ketchup"
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label="Mustard"
-                          control={
-                            <Field
-                              name="sauces"
-                              component={Checkbox}
-                              type="checkbox"
-                              value="mustard"
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label="Salsa"
-                          control={
-                            <Field
-                              name="sauces"
-                              component={Checkbox}
-                              type="checkbox"
-                              value="salsa"
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label="Guacamole 🥑"
-                          control={
-                            <Field
-                              name="sauces"
-                              component={Checkbox}
-                              type="checkbox"
-                              value="guacamole"
-                            />
-                          }
-                        />
-                      </FormGroup>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Field
-                      fullWidth
-                      name="notes"
-                      component={TextField}
-                      multiline
-                      label="Notes"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Field
-                      fullWidth
-                      name="city"
-                      component={Select}
-                      label="Select a City"
-                      formControlProps={{ fullWidth: true }}
                     >
-                      <MenuItem value="London">London</MenuItem>
-                      <MenuItem value="Paris">Paris</MenuItem>
-                      <MenuItem value="Budapest">
-                        A city with a very long Name
-                      </MenuItem>
-                    </Field>
-                  </Grid>
-                  <MuiPickersUtilsProvider
-                    utils={DateFnsUtils}
-                  ></MuiPickersUtilsProvider>
-                  <Grid item style={{ marginTop: 16 }}>
-                    <Button
-                      type="button"
-                      variant="contained"
-                      onClick={reset}
-                      disabled={submitting || pristine}
-                    >
-                      Reset
+                      +
                     </Button>
-                  </Grid>
-                  <Grid item style={{ marginTop: 16 }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      disabled={submitting}
-                    >
-                      Submit
+                    {displayCounter && (
+                      <Button disabled>{numberOfTravelers}</Button>
+                    )}
+                    {displayCounter && (
+                      <Button
+                        onClick={() =>
+                          setNumberOfTravelers(numberOfTravelers - 1)
+                        }
+                      >
+                        -
+                      </Button>
+                    )}
+                  </ButtonGroup>
+
+                  <h2>Number of rooms</h2>
+                  <ButtonGroup
+                    className="rooms"
+                    size="small"
+                    aria-label="small outlined button group"
+                  >
+                    <Button onClick={() => setNumberOfRooms(numberOfRooms + 1)}>
+                      +
                     </Button>
-                  </Grid>
-                </Grid>
-              </Paper>
-              <pre>{JSON.stringify(values, 0, 2)}</pre>
-            </form>
-          )}
-        />
-      </div>
-    );
-  }
+                    {displayCounter && (
+                      <Button disabled>{numberOfRooms}</Button>
+                    )}
+                    {displayCounter && (
+                      <Button
+                        onClick={() => setNumberOfRooms(numberOfRooms - 1)}
+                      >
+                        -
+                      </Button>
+                    )}
+                  </ButtonGroup>
+
+                  <h2>Price range</h2>
+                  <Slider
+                    defaultValue={30}
+                    getAriaValueText={(value) => `${value}°C`}
+                    aria-labelledby="discrete-slider"
+                    valueLabelDisplay="auto"
+                    step={10}
+                    marks
+                    min={10}
+                    max={110}
+                    className="price-range"
+                  />
+
+                  <div className="buttons">
+                    <div className="reset">
+                      <Button
+                        type="button"
+                        variant="contained"
+                        onClick={reset}
+                        disabled={submitting || pristine}
+                      >
+                        Reset
+                      </Button>
+                    </div>
+                    <div className="submit">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        disabled={submitting}
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </MuiPickersUtilsProvider>
+            </Paper>
+            <pre>{JSON.stringify(values, 0, 2)}</pre>
+          </form>
+        )}
+      />
+    </div>
+  );
 }
 
-export default PlanningFormPage;
+// export default PlanningFormPage;
