@@ -11,15 +11,10 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 function App() {
-  const theme = createMuiTheme({
-    palette: {
-      type: "dark"
-    }
-  });
 
   return (
     <div className="App">
-      <ThemeProvider theme={theme}>
+      <ThemeProvider>
         <Layout>
           <BrowserRouter>
             <Switch>

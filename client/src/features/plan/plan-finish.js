@@ -10,7 +10,8 @@ import { React } from 'react';
 import { plans } from '../../models/plan';
 import newYorkImage from './../../images/newYork.jpg';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(
+    {
     root: {
         maxWidth: 345,
     },
