@@ -104,8 +104,8 @@ export default function PlanningFormPage() {
                       variant="inline"
                       format="MM/dd/yyyy"
                       margin="normal"
-                      id="travel start date"
-                      label="travel start date"
+                      id="travel end date"
+                      label="travel end date"
                       value={endDate}
                       onChange={(date) => {
                         setEndDate(date);
@@ -168,18 +168,6 @@ export default function PlanningFormPage() {
                   </ButtonGroup>
 
                   <h2>Price range</h2>
-                  {/* <Slider
-                    defaultValue={30}
-                    getAriaValueText={(value) => `${value}°C`}
-                    aria-labelledby="discrete-slider"
-                    valueLabelDisplay="auto"
-                    step={10}
-                    value={price}
-                    marks
-                    min={10}
-                    max={110}
-                    className="price-range"
-                  /> */}
                   <Slider
                     value={priceRangeValue}
                     onChange={(event, newValue) => {
@@ -220,7 +208,6 @@ export default function PlanningFormPage() {
                 </div>
               </MuiPickersUtilsProvider>
             </Paper>
-            <pre>{JSON.stringify(values, 0, 2)}</pre>
           </form>
         )}
       />
