@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form } from "react-final-form";
 import {
   Paper,
-  Grid,
   Button,
   CssBaseline,
   ButtonGroup,
@@ -23,11 +22,32 @@ export default function PlanningFormPage() {
   const [numberOfTravelers, setNumberOfTravelers] = React.useState(0);
   const [numberOfRooms, setNumberOfRooms] = React.useState(0);
 
+  const [priceRangeValue, setPriceRangeValue] = React.useState([500, 6000]);
+
   const onSubmit = async (values) => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     window.alert(JSON.stringify(values, 0, 2));
   };
+
+  const marks = [
+    {
+      value: 500,
+      label: "500$",
+    },
+    {
+      value: 3000,
+      label: "3000$",
+    },
+    {
+      value: 6000,
+      label: "6000$",
+    },
+    {
+      value: 10000,
+      label: "10000$",
+    },
+  ];
 
   const validate = (values) => {
     const errors = {};
@@ -104,16 +124,6 @@ export default function PlanningFormPage() {
                     className="travelers"
                     aria-label="small outlined button group"
                   >
-                    <Button
-                      onClick={() =>
-                        setNumberOfTravelers(numberOfTravelers + 1)
-                      }
-                    >
-                      +
-                    </Button>
-                    {displayCounter && (
-                      <Button disabled>{numberOfTravelers}</Button>
-                    )}
                     {displayCounter && (
                       <Button
                         onClick={() =>
@@ -123,6 +133,16 @@ export default function PlanningFormPage() {
                         -
                       </Button>
                     )}
+                    {displayCounter && (
+                      <Button disabled>{numberOfTravelers}</Button>
+                    )}
+                    <Button
+                      onClick={() =>
+                        setNumberOfTravelers(numberOfTravelers + 1)
+                      }
+                    >
+                      +
+                    </Button>
                   </ButtonGroup>
 
                   <h2>Number of rooms</h2>
@@ -131,12 +151,6 @@ export default function PlanningFormPage() {
                     size="small"
                     aria-label="small outlined button group"
                   >
-                    <Button onClick={() => setNumberOfRooms(numberOfRooms + 1)}>
-                      +
-                    </Button>
-                    {displayCounter && (
-                      <Button disabled>{numberOfRooms}</Button>
-                    )}
                     {displayCounter && (
                       <Button
                         onClick={() => setNumberOfRooms(numberOfRooms - 1)}
@@ -144,18 +158,40 @@ export default function PlanningFormPage() {
                         -
                       </Button>
                     )}
+
+                    {displayCounter && (
+                      <Button disabled>{numberOfRooms}</Button>
+                    )}
+                    <Button onClick={() => setNumberOfRooms(numberOfRooms + 1)}>
+                      +
+                    </Button>
                   </ButtonGroup>
 
                   <h2>Price range</h2>
-                  <Slider
+                  {/* <Slider
                     defaultValue={30}
                     getAriaValueText={(value) => `${value}°C`}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
                     step={10}
+                    value={price}
                     marks
                     min={10}
                     max={110}
+                    className="price-range"
+                  /> */}
+                  <Slider
+                    value={priceRangeValue}
+                    onChange={(event, newValue) => {
+                      setPriceRangeValue(newValue);
+                      console.log(priceRangeValue);
+                    }}
+                    valueLabelDisplay="auto"
+                    aria-labelledby="range-slider"
+                    getAriaValueText={(value) => `${value}°C`}
+                    min={500}
+                    max={10000}
+                    marks={marks}
                     className="price-range"
                   />
 
