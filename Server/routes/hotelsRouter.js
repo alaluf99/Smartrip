@@ -1,7 +1,7 @@
 var express = require('express');
 var hotelsRouter = express.Router();
-var HotelsBL = require('../BL/HotelsBL');
+var hotelController = require('../controllers/hotelsController');
 
-hotelsRouter.get("/try", HotelsBL.calculateTrip);
+hotelsRouter.get("/try", hotelController.calculateTrip);
 
 module.exports = hotelsRouter;
