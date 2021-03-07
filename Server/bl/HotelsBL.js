@@ -8,21 +8,9 @@ const graphOptions = {
 const HotelsBL = {
 
     async calculateTrip(requestData) {
-        var requestData = {
-            destinationId: 1506246,
-            pageNumber: 1,
-            checkIn: '2021-03-06',
-            checkOut: '2021-03-09',
-            pageSize: 25,
-            adults1: 2,
-            currency: 'USD',
-            locale:'en_US',
-            sortOrder: 'PRICE'
-        };
-
         var options = await HotelsBL.getHotelOptions(requestData);
 
-        var graph = await HotelsBL.getHotelsGraph(options, requestData.checkIn, requestData.checkOut);
+        var graph = await HotelsBL.getHotelsGraph(options, requestData.startDate , requestData.endDate);
 
         var path = await HotelsBL.getBestPathes(graph);
 
@@ -35,15 +23,79 @@ const HotelsBL = {
      * @param {*} requestData 
      */
     async getHotelOptions(requestData) {
-        var options = await HotelsApiService.getHotels(requestData);
+        // getting all the dates pairs between the 2 dates
+        var datesOptions = HotelsBL.getDaysOptionsBetween(new Date(requestData.startDate),
+                                                 new Date(requestData.endDate));
+        var allOptions = [];
 
-        for (var option of options) {
-            option.checkIn = requestData.checkIn;
-            option.checkOut = requestData.checkOut;
-            option.price = option.ratePlan.price.exactCurrent;
+        // for each date pair
+        for (var dates of datesOptions) {
+            // creating the search data
+            var hotelsApiData = {
+                destinationId: requestData.location,
+                pageNumber: 1,
+                checkIn: dates.checkIn,
+                checkOut: dates.checkOut,
+                pageSize: 5,
+                adults1: requestData.adults,
+                currency: 'USD',
+                locale:'en_US',
+                sortOrder: 'PRICE'
+            }
+
+            // getting the hotels for the current dates pair
+            var options = await HotelsApiService.getHotels(hotelsApiData);
+
+            // for every hotel option, add checkIn, checkOut and price, and put in allOtions
+            for (var option of options) {
+                option.checkIn = dates.checkIn;
+                option.checkOut = dates.checkOut;
+                option.price = option.ratePlan.price.exactCurrent;
+
+                allOptions.push(option);
+            }
         }
 
-        return options;
+        return allOptions;
+    },
+
+    /**
+     * gets all the possible pairs of dates between 2 dates
+     * @param {*} startDate - starting date
+     * @param {*} endDate - ending date
+     * @returns - an array full of checkIn-checkOut pairs
+     */
+    getDaysOptionsBetween(startDate, endDate) {
+        // calculate the amount of nights between the 2 dates
+        var nightsBetween = Math.ceil((Math.abs(startDate.getTime() - endDate.getTime())) / (1000 * 3600 * 24));
+
+        // variable to save all the pairs
+        var datesPairs = [];
+
+        // if there is only 1 night, the only pair is the (startDate, endDate)
+        if (nightsBetween < 2) {
+            datesPairs.push({checkIn:startDate, checkOut: endDate});
+        } else {
+            // an array to hold all the dates between
+            var datesBetween = [];
+            datesBetween.push(new Date(startDate));
+            
+            // inserting all the dates between the 2 dates
+            while (startDate < endDate) {
+                startDate.setDate(startDate.getDate() + 1);
+                datesBetween.push(new Date(startDate));
+            }
+
+            // for each pair of dates, insert it into the array
+            for (var i = 0; i < datesBetween.length - 1; i++) {
+                for (var j = i + 1; j < datesBetween.length; j++) {
+                    datesPairs.push({checkIn: datesBetween[i].toISOString().split("T")[0],
+                                     checkOut: datesBetween[j].toISOString().split("T")[0]});
+                }
+            }
+        }
+
+        return datesPairs;
     },
 
     /**
@@ -118,13 +170,15 @@ const HotelsBL = {
 
         var currNode = "endNode";
         var path = [];
-        path.push(currNode);
 
         while (currNode !== "startNode") {
             currNode = dijkstraResults[currNode].predecessor
-            path.push(currNode);
-        }
 
+            if (currNode !== "startNode") {
+                path.push(graph.node(currNode));
+            }
+        }
+        
         return path.reverse();
     }
 }
