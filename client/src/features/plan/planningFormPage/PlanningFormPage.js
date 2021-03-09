@@ -63,7 +63,8 @@ export default function PlanningFormPage() {
     return errors;
   };
 
-  const displayCounter = numberOfTravelers > -1;
+  const displayTravelersCounter = numberOfTravelers > 0;
+  const displayRoomsCounter = numberOfRooms > 0;
 
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
@@ -124,7 +125,7 @@ export default function PlanningFormPage() {
                     className="travelers"
                     aria-label="small outlined button group"
                   >
-                    {displayCounter && (
+                    {displayTravelersCounter && (
                       <Button
                         onClick={() =>
                           setNumberOfTravelers(numberOfTravelers - 1)
@@ -133,7 +134,7 @@ export default function PlanningFormPage() {
                         -
                       </Button>
                     )}
-                    {displayCounter && (
+                    {displayTravelersCounter && (
                       <Button disabled>{numberOfTravelers}</Button>
                     )}
                     <Button
@@ -151,7 +152,7 @@ export default function PlanningFormPage() {
                     size="small"
                     aria-label="small outlined button group"
                   >
-                    {displayCounter && (
+                    {displayRoomsCounter && (
                       <Button
                         onClick={() => setNumberOfRooms(numberOfRooms - 1)}
                       >
@@ -159,7 +160,7 @@ export default function PlanningFormPage() {
                       </Button>
                     )}
 
-                    {displayCounter && (
+                    {displayRoomsCounter && (
                       <Button disabled>{numberOfRooms}</Button>
                     )}
                     <Button onClick={() => setNumberOfRooms(numberOfRooms + 1)}>
