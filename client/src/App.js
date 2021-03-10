@@ -1,14 +1,15 @@
+import { ThemeProvider } from '@material-ui/core/styles';
 import React from "react";
-import "./App.css";
-import { Home } from "./features/home/home";
-import Layout from "./hoc/layout/Layout";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import PlanningFormPage from "./features/plan/planningFormPage/PlanningFormPage";
-import Login from "./features/login/login";
-import SignUp from "./features/sign-up/sign-up";
+import "./App.css";
 import History from "./features/history/history";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { Home } from "./features/home/home";
+import Login from "./features/login/login";
+import PlanDetails from "./features/plan/plan-details/plan-details";
+import PlanningFormPage from "./features/plan/planningFormPage/PlanningFormPage";
+import Suggestions from "./features/plan/suggestions";
+import SignUp from "./features/sign-up/sign-up";
+import Layout from "./hoc/layout/Layout";
 
 function App() {
 
@@ -22,6 +23,8 @@ function App() {
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
               <Route path="/history" component={History} />
+              <Route path="/suggestions" component={Suggestions} />
+              <Route path="/plandetails" component={PlanDetails} />
               <Route exact path="/" component={Home} />
             </Switch>
           </BrowserRouter>

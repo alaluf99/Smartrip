@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import homeBackgroundImage from './../../images/home-background.jpeg';
-import Suggestions from './suggestions';
+import HomeSuggestions from './home-suggestions';
 
 const useStyles = makeStyles((theme) => ({
     text: {
@@ -69,7 +69,7 @@ export function Home() {
                     </Grid>
                 </Paper>
                 <Grid container spacing={2} justify="center" className={{ width: '100%' }}>
-                    <Suggestions />
+                    <HomeSuggestions />
                 </Grid>
             </Grid>
         </div>
