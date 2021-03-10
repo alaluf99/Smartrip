@@ -8,7 +8,8 @@ export const plans = [{
                 "Latitude":10,
                 "Longitude":10
             },
-            rating:4
+            rating:4,
+            link: "http://hotel"
         },
         fromDate:"3/3/2021",
         toDate:"3/4/2021",

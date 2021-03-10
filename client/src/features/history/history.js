@@ -1,7 +1,7 @@
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import FinishPlan from '../plan/plan-finish';
+import PlanSummery from '../plan/plan-summery';
 
 const useStyles = makeStyles((theme) => ({
 }));
@@ -13,7 +13,7 @@ export default function History() {
         <div>
             <Container>
                 <h1>My History</h1>
-                <FinishPlan />
+                <PlanSummery />
             </Container>
         </div>
     );
