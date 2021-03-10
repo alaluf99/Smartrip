@@ -37,6 +37,7 @@ export default function Menu() {
           <Button color="inherit" href="login">Login</Button>
           <Button color="inherit" href="signup">Sign up</Button>
           <Button color="inherit" href="suggestions">Suggestions</Button>
+          <Button color="inherit" href="planning">Planning</Button>
           <Button color="inherit" href="plandetails">Plan details</Button>
         </Toolbar>
       </AppBar>

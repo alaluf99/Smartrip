@@ -6,7 +6,7 @@ import History from "./features/history/history";
 import { Home } from "./features/home/home";
 import Login from "./features/login/login";
 import PlanDetails from "./features/plan/plan-details/plan-details";
-import PlanningFormPage from "./features/plan/planningFormPage/PlanningFormPage";
+import PlanningFormPage from "./features/plan/planning-form-page/planning-form-page";
 import Suggestions from "./features/plan/suggestions";
 import SignUp from "./features/sign-up/sign-up";
 import Layout from "./hoc/layout/Layout";
