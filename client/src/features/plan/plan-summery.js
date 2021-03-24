@@ -70,7 +70,7 @@ export default function PlanSummery() {
                                 <br />
                 number of children: {plan.childrenNumber}
                                 <br />
-    tota price: {plan.totaPrice}
+    total price: {plan.totalPrice}
                             </Typography>
                         </CardContent>
                     </CardActionArea>

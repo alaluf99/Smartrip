@@ -55,7 +55,7 @@ export default function PlanDetails() {
                                 <br />
                     number of children: {plan.childrenNumber}
                                 <br />
-        tota price: {plan.totaPrice}$
+        tota price: {plan.totalPrice}$
                             </Typography>
                             <br></br>
                             <Typography variant="h6">Places</Typography>

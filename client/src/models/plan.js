@@ -34,6 +34,6 @@ export const plans = [{
     creationDate: "3/2/2021",
     startDate: "3/3/2021",
     endDate: "3/4/2021",
-    totaPrice: 800,
+    totalPrice: 800,
     userId: "xwXYUprVZnTHNCauVLo2SNBFSsq2"
 }]
