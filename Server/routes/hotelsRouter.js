@@ -1,7 +1,7 @@
 var express = require('express');
 var hotelsRouter = express.Router();
-var apiService = require('../services/HotelsApiService');
+var hotelController = require('../controllers/hotelsController');
 
-hotelsRouter.get("/try", apiService.getHotels);
+hotelsRouter.get("/try", hotelController.calculateTrip);
 
 module.exports = hotelsRouter;

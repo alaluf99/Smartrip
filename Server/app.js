@@ -3,6 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+// var admin = require('firebase-admin');
+// const serviceAccount = require('./utils/serviceAccountKey.json');
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
 
 var apiRouter = require('./routes/apiRouter');
 

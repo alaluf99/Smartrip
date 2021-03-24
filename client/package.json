@@ -22,6 +22,7 @@
     "final-form": "latest",
     "final-form-material-ui": "0.3.0",
     "material-ui": "^0.20.2",
+    "axios": "^0.21.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-final-form": "latest",
@@ -50,5 +51,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy":"http://localhost:5000/smart-trip-4223b/us-central1/api"
 }
