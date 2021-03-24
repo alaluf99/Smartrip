@@ -19,7 +19,11 @@ const HotelsApiService = {
                 })
                 .query(requestData)
                 .then(response => {
-                    resolve(response.body.data.body.searchResults.results);
+                    var hotels = {hotels: response.body.data.body.searchResults.results};
+                    hotels.checkIn = requestData.checkIn;
+                    hotels.checkOut = requestData.checkOut;
+                    hotels.location = requestData.destinationId;
+                    resolve(hotels);
                 }).catch(err => {
                     console.log("err");
                     reject(err);

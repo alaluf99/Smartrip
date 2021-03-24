@@ -25,14 +25,16 @@ const HotelsBL = {
     async getHotelOptions(requestData) {
         // getting all the dates pairs between the 2 dates
         var datesOptions = HotelsBL.getDaysOptionsBetween(new Date(requestData.startDate),
-                                                 new Date(requestData.endDate));
+                                                 new Date(requestData.endDate),
+                                                 requestData.locations);
         var allOptions = [];
+        var optionPromises = [];
 
         // for each date pair
         for (var dates of datesOptions) {
             // creating the search data
             var hotelsApiData = {
-                destinationId: requestData.location,
+                destinationId: dates.location,
                 pageNumber: 1,
                 checkIn: dates.checkIn,
                 checkOut: dates.checkOut,
@@ -43,16 +45,23 @@ const HotelsBL = {
                 sortOrder: 'PRICE'
             }
 
-            // getting the hotels for the current dates pair
-            var options = await HotelsApiService.getHotels(hotelsApiData);
+            // getting the promise to get the hotels data, and pushing it into an array with all of
+            // the other promises.
+            optionPromises.push(HotelsApiService.getHotels(hotelsApiData));
+        }
 
-            // for every hotel option, add checkIn, checkOut and price, and put in allOtions
-            for (var option of options) {
-                option.checkIn = dates.checkIn;
-                option.checkOut = dates.checkOut;
-                option.price = option.ratePlan.price.exactCurrent;
+        // getting the hotels for all of the date pairs
+        var optionsForDays = await Promise.all(optionPromises);
 
-                allOptions.push(option);
+        // for every hotel option, add checkIn, checkOut and price, and put in allOtions
+        for (var options of optionsForDays) {
+            for (var hotel of options.hotels) {
+                hotel.checkIn = options.checkIn;
+                hotel.checkOut = options.checkOut;
+                hotel.location = options.location;
+                hotel.price = hotel.ratePlan.price.exactCurrent;
+
+                allOptions.push(hotel);
             }
         }
 
@@ -63,34 +72,73 @@ const HotelsBL = {
      * gets all the possible pairs of dates between 2 dates
      * @param {*} startDate - starting date
      * @param {*} endDate - ending date
-     * @returns - an array full of checkIn-checkOut pairs
+     * @param {{location, startDate, endDate, isflexible}} - an array with all the wanted locations, 
+     *                          and how much nights we want to be at them
+     * @returns - an array full of checkIn-checkOut pairs, with a location to each pair
      */
-    getDaysOptionsBetween(startDate, endDate) {
+    getDaysOptionsBetween(startDate, endDate, locations) {
         // calculate the amount of nights between the 2 dates
         var nightsBetween = Math.ceil((Math.abs(startDate.getTime() - endDate.getTime())) / (1000 * 3600 * 24));
 
         // variable to save all the pairs
         var datesPairs = [];
 
-        // if there is only 1 night, the only pair is the (startDate, endDate)
+        // if there is only 1 night, the only pair is the (startDate, endDate) and it's to the first location
         if (nightsBetween < 2) {
-            datesPairs.push({checkIn:startDate, checkOut: endDate});
+            datesPairs.push({checkIn:startDate.toISOString().split("T")[0],
+                            checkOut: endDate.toISOString().split("T")[0],
+                            location: locations[0].location});
         } else {
             // an array to hold all the dates between
             var datesBetween = [];
-            datesBetween.push(new Date(startDate));
+            datesBetween.push({date: new Date(startDate)});
             
             // inserting all the dates between the 2 dates
             while (startDate < endDate) {
                 startDate.setDate(startDate.getDate() + 1);
-                datesBetween.push(new Date(startDate));
+                datesBetween.push({date: new Date(startDate)});
+            }
+
+            // getting all the flexible and notflexible locations
+            var flexibleLocations = locations.filter(loc => loc.isFlexible);
+            var notflexibleLocations = locations.filter(loc => !loc.isFlexible);
+
+            // running on all of the not flexible locations to mark the dates as not flexible.
+            for (var i = 0; i < notflexibleLocations.length; i++) {
+                var currLocation = notflexibleLocations[i];
+                for (date of datesBetween) {
+                    // if it is a date of other location that isn't flexible then there is no need to check
+                    if (date.notFlexIndex == null) {
+                        let locationStartDate = new Date(currLocation.startDate);
+                        let locationEndDate = new Date(currLocation.endDate);
+
+                        if (locationStartDate <= date.date && locationEndDate >= date.date) {
+                            date.notFlexIndex = i;
+                        }
+                    }
+                }
             }
 
             // for each pair of dates, insert it into the array
             for (var i = 0; i < datesBetween.length - 1; i++) {
                 for (var j = i + 1; j < datesBetween.length; j++) {
-                    datesPairs.push({checkIn: datesBetween[i].toISOString().split("T")[0],
-                                     checkOut: datesBetween[j].toISOString().split("T")[0]});
+                    var firstDate = datesBetween[i];
+                    var secondDate = datesBetween[j];
+
+                    // if there is a mandatory location for those dates (must be the same),
+                    // than adding only this location as an option
+                    if (firstDate.notFlexIndex && secondDate.notFlexIndex && (firstDate.notFlexIndex == secondDate.notFlexIndex)) {
+                        datesPairs.push({checkIn: firstDate.date.toISOString().split("T")[0],
+                                     checkOut: secondDate.date.toISOString().split("T")[0],
+                                     location: notflexibleLocations[firstDate.notFlexIndex]})
+                    } else if(!firstDate.notFlexIndex && !secondDate.notFlexIndex) {
+                        // adding an option for this dates pair for all the locations
+                        for (var loc of flexibleLocations) {
+                            datesPairs.push({checkIn: firstDate.date.toISOString().split("T")[0],
+                                        checkOut: secondDate.date.toISOString().split("T")[0],
+                                        location: loc.location});
+                        }
+                    }
                 }
             }
         }
@@ -164,7 +212,31 @@ const HotelsBL = {
      */
     async getBestPathes(graph) {
         
-        var dijkstraResults = algs.dijkstra(graph, "startNode", function(edge) {
+        var dijkstraResults = algs.dijkstra(graph, "startNode", function(edge, pathsSoFar, w) {
+            // if we already found a path up till this node and it's not the endNode
+            if (pathsSoFar[w].predecessor != null && edge.w !== "endNode") {
+                var currNode = edge.v;
+                var nextNode = graph.node(edge.w);
+                var locations = [];
+
+                // getting all of the locations we already been into
+                while (currNode !== "startNode") {
+                    var node = graph.node(currNode);
+                    if (locations.indexOf(node.location) == -1) {
+                        locations.push(node.location);
+                    }
+                    
+                    currNode = pathsSoFar[currNode].predecessor
+                }
+
+                // if the next locations isn't like the last hotel and isn't new location,
+                // the weight is infinity so we won't go back to an old location
+                var index = locations.indexOf(nextNode.location);
+                if (index != -1 && index != 0) {
+                    return Number.POSITIVE_INFINITY;
+                }
+            }
+
             return graph.edge(edge);
         });
 

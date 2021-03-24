@@ -157,3 +157,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,react,node
 .vscode/launch.json
+Server/package-lock.json
