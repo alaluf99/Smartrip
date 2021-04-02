@@ -18,12 +18,13 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.21.1",
     "date-fns": "next",
     "final-form": "latest",
     "final-form-material-ui": "0.3.0",
     "material-ui": "^0.20.2",
-    "axios": "^0.21.1",
     "react": "^17.0.1",
+    "react-bingmaps": "^3.6.1",
     "react-dom": "^17.0.1",
     "react-final-form": "latest",
     "react-redux": "^7.2.2",
@@ -52,5 +53,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy":"http://localhost:5000/smart-trip-4223b/us-central1/api"
+  "proxy": "http://localhost:5000/smart-trip-4223b/us-central1/api"
 }

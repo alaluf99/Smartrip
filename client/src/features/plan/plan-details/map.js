@@ -1,30 +1,29 @@
 import React, { Component } from 'react';
-import GoogleMapReact from 'google-map-react';
+import { ReactBingmaps } from 'react-bingmaps';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+export default function Map({ locations }) {
 
-export default function MyMap() {
-    const defaultProps = {
-        center: {
-            lat: 59.95,
-            lng: 30.33
-        },
-        zoom: 11
-    };
+    console.log(locations)
+    const infoboxesWithPushPins = locations.map(l => {
+        const {location} = l;
+        return {
+            "location": [location.Latitude, location.Longitude],
+            "addHandler": "mouseover",
+            "infoboxOption": { title: l.name, description: l.name },
+            "pushPinOption": { title: 'Pushpin Title', description: 'Pushpin' },
+        }
+    });
+
+    const center = locations[0].location;
 
     return (
         <div style={{ height: '100vh', width: '100%' }}>
-            <GoogleMapReact
-                bootstrapURLKeys={{ key: 'AIzaSyAp7Hcn5YYm3og3yrA4W2UXZF7rO8jfhWo' }}
-                defaultCenter={defaultProps.center}
-                defaultZoom={defaultProps.zoom}
+            <ReactBingmaps
+                bingmapKey="ArBlxpzzSR8urxsgYBZ7umU6Gf8V22QcAZs3P-PCkZ6r9TVrb7A2KeffHEMmafDl"
+                center={[center.Latitude, center.Longitude]}
+                infoboxesWithPushPins={infoboxesWithPushPins}
             >
-                <AnyReactComponent
-                    lat={59.955413}
-                    lng={30.337844}
-                    text="My Marker"
-                />
-            </GoogleMapReact>
-        </div>
+            </ReactBingmaps>
+        </div >
     );
 }
