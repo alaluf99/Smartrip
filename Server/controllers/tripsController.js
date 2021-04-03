@@ -14,6 +14,15 @@ const tripsController = {
 
     },
     async addNewTrip(req,res) {},
+    async planTrip(req,res) {
+        try {
+            var plan =  await tripsService.planTrip(req.plan);
+            return res.status(200).json({data:plan});
+        } catch(e) {
+            console.error(e);
+            return res.status(400).json({error:e.error});
+        }
+    }
 }
 
 module.exports = tripsController;
