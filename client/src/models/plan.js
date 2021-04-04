@@ -4,8 +4,8 @@ export const plans = [{
             accommodationName: "Bereshit",
             city: "Haifa",
             location: {
-                "Latitude": 20,
-                "Longitude": 20
+                "Latitude": 13.0827,
+                "Longitude": 80.2707
             },
             rating: 5,
             link: "http://hotel"
@@ -19,8 +19,8 @@ export const plans = [{
             accommodationName: "Gordon",
             city: "Tel-Aviv",
             location: {
-                "Latitude": 10,
-                "Longitude": 10
+                "Latitude": 13.0097,
+                "Longitude": 80.2707
             },
             rating: 4,
             link: "http://hotel"

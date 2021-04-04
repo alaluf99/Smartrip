@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Rating from '@material-ui/lab/Rating';
 import { plans } from '../../../models/plan';
 import hotelIcon from './../../../images/hotel.png';
-import MyMap from './map';
+import Map from './map';
 
 const useStyles = makeStyles((theme) => (
     {
@@ -85,7 +85,7 @@ export default function PlanDetails() {
 
             </Grid>
             <Grid item xs={12} sm={8} md={5} elevation={6} square>
-                <MyMap />
+                <Map locations={plan.sections.map(l => {return { "location": l.accommodation.location, "name":l.accommodation.accommodationName}})}/>
             </Grid>
         </Grid>
     );
