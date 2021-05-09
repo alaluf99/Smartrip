@@ -34,15 +34,10 @@ const HotelsBL = {
         for (var dates of datesOptions) {
             // creating the search data
             var hotelsApiData = {
-                destinationId: dates.location,
-                pageNumber: 1,
+                location: dates.location,
                 checkIn: dates.checkIn,
                 checkOut: dates.checkOut,
-                pageSize: 5,
-                adults1: requestData.adults,
-                currency: 'USD',
-                locale:'en_US',
-                sortOrder: 'PRICE'
+                people: requestData.people,
             }
 
             // getting the promise to get the hotels data, and pushing it into an array with all of
@@ -55,11 +50,10 @@ const HotelsBL = {
 
         // for every hotel option, add checkIn, checkOut and price, and put in allOtions
         for (var options of optionsForDays) {
-            for (var hotel of options.hotels) {
+            for (var hotel of options.hotels[0]) {
                 hotel.checkIn = options.checkIn;
                 hotel.checkOut = options.checkOut;
                 hotel.location = options.location;
-                hotel.price = hotel.ratePlan.price.exactCurrent;
 
                 allOptions.push(hotel);
             }
@@ -169,10 +163,9 @@ const HotelsBL = {
             // calculate the numbers of nights in the hotel for this option
             var checkInDate = new Date(from.checkIn);
             var checkOutDate = new Date(from.checkOut);
-            var nightsInFirstHotel = Math.ceil((Math.abs(checkOutDate.getTime() - checkInDate.getTime())) / (1000 * 3600 * 24));
 
             // find a weight to add here, maybe based on distance and price
-            var weight = nightsInFirstHotel * from.price - from.starRating;
+            var weight = from.price - from.star;
             
             // if this is a starting edge, 
             if (from.checkIn === startCheckIn) {
@@ -201,7 +194,7 @@ const HotelsBL = {
      * @param {} hotel 
      */
     getHotelOptionId(hotel) {
-        return hotel.id.toString() + hotel.checkIn.toString() + hotel.checkOut.toString();
+        return hotel.name.replace(/ /g, '') + hotel.checkIn.toString() + hotel.checkOut.toString();
     },
 
     /**
@@ -243,7 +236,7 @@ const HotelsBL = {
         var currNode = "endNode";
         var path = [];
 
-        while (currNode !== "startNode") {
+        while (currNode !== "startNode" && currNode !== null) {
             currNode = dijkstraResults[currNode].predecessor
 
             if (currNode !== "startNode") {
