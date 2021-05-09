@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 // var admin = require('firebase-admin');
 // const serviceAccount = require('./utils/serviceAccountKey.json');
 
@@ -13,6 +14,7 @@ var logger = require('morgan');
 var apiRouter = require('./routes/apiRouter');
 
 var app = express();
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

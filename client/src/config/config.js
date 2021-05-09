@@ -1,5 +1,5 @@
 const config = {
-  serverUrl: "https://api.mocki.io/v1/",
+  serverUrl: "http://localhost:3000/api/",
 };
 
 export default config;

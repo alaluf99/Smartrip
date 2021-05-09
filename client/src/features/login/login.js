@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,6 +13,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import vacationImage from './../../images/vacation.jfif'
+import { useHistory } from "react-router-dom";
+import { loginUser } from '../../actions/userActions';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',
@@ -46,6 +49,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
     const classes = useStyles();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    let history = useHistory();
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const userData = {
+            email: email,
+            password: password
+        };
+        loginUser(userData, history);
+    }
 
     return (
         <Grid container component="main" className={classes.root}>
@@ -61,7 +76,7 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         Sign in
           </Typography>
-                    <form className={classes.form} noValidate>
+                    <form className={classes.form} noValidate onSubmit={handleSubmit}>
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -72,6 +87,8 @@ export default function Login() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            value={email}
+                            onChange={e=> setEmail(e.target.value)}
                         />
                         <TextField
                             variant="outlined"
@@ -83,6 +100,8 @@ export default function Login() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            value={password}
+                            onChange={e=> setPassword(e.target.value)}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -104,7 +123,7 @@ export default function Login() {
                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/signup" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
