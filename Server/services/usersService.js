@@ -5,20 +5,21 @@ const usersService = {
     async registerUser(newUser) {
         try{
             let token, userId;
-            let doc = await db.doc(`/users/${newUser.handle}`).get();
+            let doc = await db.collection('users').where('email','==',newUser.email).get();
             if(doc.exists) {
-                return ({ handle: "this handle is already taken" });
+                return ({ email: "this email is already in use" });
             }
             let data = await firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
             userId = data.user.uid;
             token = await data.user.getIdToken();
             const userCredentials = {
-                handle: newUser.handle,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
                 email: newUser.email,
                 createdAt: new Date().toISOString(),
                 userId,
             };
-            await db.doc(`/users/${newUser.handle}`).set(userCredentials);
+            await db.collection('users').add(userCredentials);
             return token;
 
         } catch(e) {

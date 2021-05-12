@@ -15,6 +15,10 @@ export const signupUser = (newUserData, history) => {
             history.push('/');
         })
 }
+export const logoutUser = () => {
+    localStorage.removeItem('FBIdToken');
+    delete axios.defaults.headers.common['Authorization'];
+}
 
 const setAuthorizationHeader = (token) => {
     const FBIdToken = `Bearer ${token}`;
