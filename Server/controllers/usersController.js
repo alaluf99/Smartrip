@@ -6,8 +6,9 @@ const UsersController = {
     async registerUser(req, res) {
         const newUser = {
             email: req.body.email,
-            password: req.body.password,
-            handle: req.body.handle, 
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: req.body.password
         };
     
         const { valid, errors } = validateSignupData(newUser);
@@ -23,7 +24,7 @@ const UsersController = {
             } else {
             return res
                 .status(500)
-                .json({ general: "Something went wrong, please try again" });
+                .json({ error: err.message });
             }
         }
     },
