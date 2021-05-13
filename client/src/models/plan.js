@@ -1,4 +1,4 @@
-export const plans = [
+export const plansData = [
     {
     sections: [{
         accommodation: {
@@ -8,11 +8,11 @@ export const plans = [
                 "Latitude": 13.0827,
                 "Longitude": 80.2707
             },
-            rating: 5,
+            rating: 3,
             link: "http://hotel"
         },
-        fromDate: "5/3/2021",
-        toDate: "8/3/2021",
+        fromDate: "15/7/2021",
+        toDate: "18/7/2021",
         price: 600
     },
     {
@@ -23,15 +23,15 @@ export const plans = [
                 "Latitude": 13.0097,
                 "Longitude": 80.2707
             },
-            rating: 4,
+            rating: 5,
             link: "http://hotel"
         },
-        fromDate: "3/3/2021",
-        toDate: "5/3/2021",
+        fromDate: "18/9/2021",
+        toDate: "21/9/2021",
         price: 200
     }],
-    adultsNumber: 2,
-    childrenNumber: 0,
+    adultsNumber: 3,
+    childrenNumber: 1,
     creationDate: "3/2/2021",
     startDate: "3/3/2021",
     endDate: "3/4/2021",

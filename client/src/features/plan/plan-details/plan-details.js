@@ -2,11 +2,11 @@ import { Button, CssBaseline, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Rating from '@material-ui/lab/Rating';
-import { plans } from '../../../models/plan';
 import hotelIcon from './../../../images/hotel.png';
 import Map from './map';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { planTrip } from '../../../actions/planActions';
+import { plansData } from '../../../models/plan';
 
 const useStyles = makeStyles((theme) => (
     {
@@ -36,12 +36,11 @@ const useStyles = makeStyles((theme) => (
 
 export default function PlanDetails() {
 
-    const plans = planTrip({})
+    const plans = plansData
 
     const [plan, setPlan] = useState(plans[0]);
     const [planIndex, setPlanIndex] = useState(0);
     
-
     const classes = useStyles();
 
     const updatePlan = (i) => {
