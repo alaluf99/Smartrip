@@ -2,7 +2,7 @@ import { Avatar, Grid, makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React from "react";
-import { suggestions } from '../../models/suggestions';
+import { suggestionsData } from '../../models/suggestions';
 import { Suggestion } from '../suggestion';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,7 @@ export default function Suggestions() {
             <Grid container className={classes.root} spacing={2}>
                 <Grid item xs={12}>
                     <Grid container justify="center" spacing={3}>
-                        {[...suggestions, ...suggestions].map((s) => (
+                        {[...suggestionsData, ...suggestionsData].map((s) => (
                             <Grid key={s} item>
                                 { Suggestion(s)}
                             </Grid>

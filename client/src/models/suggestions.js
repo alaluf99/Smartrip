@@ -1,4 +1,4 @@
-export const suggestions = [{
+export const suggestionsData = [{
     adultsNumber:2,
     childrenNumber:0,
     startDate:"3/3/2021",

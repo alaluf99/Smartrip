@@ -3,9 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect } from "react";
 import PlanSummery from "../plan/plan-summery";
 import axios from "../../axios-smartTrip";
-import serverEndPoints from "../../config/serverEndPoints";
 import Error from "../../pages/errorPage/ErrorPage";
 import LoadingPage from "../../pages/loadingPage/LoadingPage";
+import config, { serverUrls } from "../../config/config";
+import { getHeaders, getUserToken } from "../../actions/userActions";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -16,12 +17,11 @@ export default function History() {
   const [errorLoading, setErrorLoading] = useState(false);
 
   useEffect(() => {
-    // Update the document title using the browser API
     axios
-      .get(serverEndPoints.plansHistory)
+      .get(serverUrls.history, {headers: getHeaders()})
       .then((response) => {
-        console.log(JSON.stringify(response.data));
-        setPlansHistory(response.data);
+        console.log(response.data.data);
+        setPlansHistory(response.data.data);
       })
       .catch((err) => {
         setErrorLoading(true);

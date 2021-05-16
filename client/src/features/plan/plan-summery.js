@@ -46,6 +46,7 @@ const useStyles = makeStyles({
 export default function PlanSummery(props) {
   const classes = useStyles();
 
+  console.log(props)
   return (
     <div className={classes.root}>
       {props.plans.map((plan) => (
@@ -77,7 +78,7 @@ export default function PlanSummery(props) {
                 <br />
                 number of children: {plan.childrenNumber}
                 <br />
-                total price: {plan.totalPrice}
+                total price: {plan.totaPrice}
               </Typography>
             </CardContent>
           </CardActionArea>
