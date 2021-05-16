@@ -1,4 +1,4 @@
-const hotelsBL = require('../BL/HotelsBL');
+const hotelsBL = require('../bl/HotelsBL');
 
 const HotelsController = {
 
