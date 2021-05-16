@@ -48,8 +48,10 @@ const HotelsApiService = {
         hotels.location = requestData.location.replace(/ /g, '');
 
         try {
-            fs.unlink(fileName);
-        } catch(e) {}
+            fs.unlink(fileName, () => {});
+        } catch(e) {
+            console.log(e);
+        }
 
         resolve(hotels);
         });
