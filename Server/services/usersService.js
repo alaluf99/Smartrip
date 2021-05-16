@@ -6,7 +6,7 @@ const usersService = {
         try{
             let token, userId;
             let doc = await db.collection('users').where('email','==',newUser.email).get();
-            if(doc.exists) {
+            if(!doc.empty) {
                 return ({ email: "this email is already in use" });
             }
             let data = await firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
