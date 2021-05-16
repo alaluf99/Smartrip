@@ -10,6 +10,20 @@ import PlanningFormPage from "./features/plan/planning-form-page/planning-form-p
 import Suggestions from "./features/plan/suggestions";
 import SignUp from "./features/sign-up/sign-up";
 import Layout from "./hoc/layout/Layout";
+import jwtDecode from 'jwt-decode';
+import { AuthRoute } from './util/AuthRoute';
+
+let authenticated;
+const token = localStorage.FBIdToken;
+if(token) {
+  const decodedToken = jwtDecode(token);
+  if(decodedToken.exp * 1000 < Date.now()) {
+    window.location.href = '/login'
+    authenticated = false;
+  } else {
+    authenticated = true;
+  }
+}
 
 function App() {
 
@@ -20,8 +34,8 @@ function App() {
           <BrowserRouter>
             <Switch>
               <Route path="/planning" component={PlanningFormPage} />
-              <Route path="/login" component={Login} />
-              <Route path="/signup" component={SignUp} />
+              <AuthRoute path="/login" component={Login} authenticated={authenticated}/>
+              <AuthRoute path="/signup" component={SignUp} authenticated={authenticated}/>
               <Route path="/history" component={History} />
               <Route path="/suggestions" component={Suggestions} />
               <Route path="/plandetails" component={PlanDetails} />

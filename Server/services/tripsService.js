@@ -2,25 +2,25 @@ const { planTrip } = require('../controllers/tripsController');
 const { firebase, db } = require('../utils/admin');
 
 const tripsService = {
-    async getTrips(handle) {
+    async getTrips(email) {
         let tripsIds = [];
-        let doc = await db.doc(`users/${handle}`).get();
-        if(doc.exists) {
-        if(doc.data().tripsRef) {
-            tripsIds = doc.data().tripsRef;
-            if(tripsIds.length > 0) {
-            let tripsPromises = []
-            tripsIds.forEach(tripId => {
-                tripsPromises.push(tripHelper(tripId));
-            });
-            return Promise.all(tripsPromises).then((trips) => {
-                return trips
-            });
-            }
-            else {
-            return ({error:"trips not found"});
-            }
-            }
+        let doc = await db.collection('users').where('email','==',email).get();
+        if(!doc.empty) {
+          if(doc.docs[0].data().tripsRef) {
+              tripsIds = doc.docs[0].data().tripsRef;
+              if(tripsIds.length > 0) {
+                let tripsPromises = []
+                tripsIds.forEach(tripId => {
+                    tripsPromises.push(tripHelper(tripId));
+                });
+                return Promise.all(tripsPromises).then((trips) => {
+                    return trips
+                });
+              }
+              else {
+              return ({error:"trips not found"});
+              }
+              }
         } else {
             return ({error:"user not found"});
         }
