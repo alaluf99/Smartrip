@@ -1,20 +1,24 @@
-import { CssBaseline, Grid } from '@material-ui/core';
+import { Button, CssBaseline, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Rating from '@material-ui/lab/Rating';
-import { plans } from '../../../models/plan';
 import hotelIcon from './../../../images/hotel.png';
 import Map from './map';
+import React, { useEffect, useState } from 'react';
+import { planTrip } from '../../../actions/planActions';
+import { plansData } from '../../../models/plan';
 
 const useStyles = makeStyles((theme) => (
     {
         root: {
             height: '100vh',
-            maxWidth: '199%'
 
         },
         hotelIcon: {
             width: 30
+        },
+        menu: {
+            padding: theme.spacing(8, 4),
         },
         paper: {
             margin: theme.spacing(8, 4),
@@ -31,12 +35,35 @@ const useStyles = makeStyles((theme) => (
     }))
 
 export default function PlanDetails() {
+
+    const plans = plansData
+
+    const [plan, setPlan] = useState(plans[0]);
+    const [planIndex, setPlanIndex] = useState(0);
+    
     const classes = useStyles();
-    const plan = plans[0]
+
+    const updatePlan = (i) => {
+        setPlan(plans[i])
+        setPlanIndex(i)
+    }
+
     return (
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
-            <Grid item xs={false} sm={4} md={6} className={classes.paper} square>
+            <Grid component="main" className={classes.menu} item xs={1}>
+                {
+                    plans.map((p, i) =>
+                        <div>
+                            <Grid >
+                                <Button onClick={()=>updatePlan(i)} variant="contained" color="secondary">Plan {i + 1}#</Button>
+                            </Grid>
+                            <br></br>
+                        </div>
+                    )
+                }
+            </Grid>
+            <Grid item xs={5} className={classes.paper} square>
                 <div component="main" maxWidth="xs">
                     <div className={classes.root}>
                         <div>
@@ -45,7 +72,7 @@ export default function PlanDetails() {
                                     {plan.startDate} - {plan.endDate}
                                 </Typography>
                                 <Typography gutterBottom variant="h5" component="h2">
-                                    My trip
+                                    Plan suggestion {planIndex + 1}#
                     </Typography>
                             </div>
                             <Typography variant="h6">General info</Typography>
@@ -84,8 +111,8 @@ export default function PlanDetails() {
                 </div>
 
             </Grid>
-            <Grid item xs={12} sm={8} md={5} elevation={6} square>
-                <Map locations={plan.sections.map(l => {return { "location": l.accommodation.location, "name":l.accommodation.accommodationName}})}/>
+            <Grid item xs={5} elevation={6} square>
+                <Map locations={plan.sections.map(l => { return { "location": l.accommodation.location, "name": l.accommodation.accommodationName } })} />
             </Grid>
         </Grid>
     );
