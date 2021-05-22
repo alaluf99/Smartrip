@@ -32,12 +32,20 @@ const HotelsBL = {
 
         // for each date pair
         for (var dates of datesOptions) {
+            //var id = await HotelsApiService.getDestinationId(dates.location);
+
             // creating the search data
             var hotelsApiData = {
+                //destinationId: id,
                 location: dates.location,
                 checkIn: dates.checkIn,
                 checkOut: dates.checkOut,
                 people: requestData.people,
+                pageNumber: 1,
+                pageSize: 5,
+                currency: 'USD',
+                locale:'en_US',
+                sortOrder: 'PRICE'
             }
 
             // getting the promise to get the hotels data, and pushing it into an array with all of
@@ -53,7 +61,10 @@ const HotelsBL = {
             for (var hotel of options.hotels[0]) {
                 hotel.checkIn = options.checkIn;
                 hotel.checkOut = options.checkOut;
+                //hotel.locationId = options.locationId;
                 hotel.location = options.location;
+                hotel.locationName = options.locationName;
+                //hotel.price = hotel.ratePlan.price.exactCurrent;
 
                 allOptions.push(hotel);
             }
@@ -163,6 +174,7 @@ const HotelsBL = {
             // calculate the numbers of nights in the hotel for this option
             var checkInDate = new Date(from.checkIn);
             var checkOutDate = new Date(from.checkOut);
+            //var nightsInFirstHotel = Math.ceil((Math.abs(checkOutDate.getTime() - checkInDate.getTime())) / (1000 * 3600 * 24));
 
             // find a weight to add here, maybe based on distance and price
             var weight = from.price - from.star;
@@ -194,6 +206,7 @@ const HotelsBL = {
      * @param {} hotel 
      */
     getHotelOptionId(hotel) {
+        //return hotel.id.toString() + hotel.checkIn.toString() + hotel.checkOut.toString();
         return hotel.name.replace(/ /g, '') + hotel.checkIn.toString() + hotel.checkOut.toString();
     },
 
