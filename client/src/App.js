@@ -13,6 +13,10 @@ import Layout from "./hoc/layout/Layout";
 import jwtDecode from 'jwt-decode';
 import { AuthRoute } from './util/AuthRoute';
 
+// Redux
+import { Provider } from 'react-redux';
+import store from './redux/store';
+
 let authenticated;
 const token = localStorage.FBIdToken;
 if(token) {
@@ -28,26 +32,25 @@ if(token) {
 function App() {
 
   return (
-    <div className="App">
-      <ThemeProvider>
-        <Layout>
-          <BrowserRouter>
-            <Switch>
-              <Route path="/planning" component={PlanningFormPage} />
-              <AuthRoute path="/login" component={Login} authenticated={authenticated}/>
-              <AuthRoute path="/signup" component={SignUp} authenticated={authenticated}/>
-              <Route path="/history" component={History} />
-              <Route path="/suggestions" component={Suggestions} />
-              <Route path="/plandetails" component={PlanDetails} />
-              <Route exact path="/" component={Home} />
-            </Switch>
-          </BrowserRouter>
-        </Layout>
-      </ThemeProvider>
-
-
-
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <ThemeProvider>
+          <Layout>
+            <BrowserRouter>
+              <Switch>
+                <Route path="/planning" component={PlanningFormPage} />
+                <AuthRoute path="/login" component={Login} authenticated={authenticated}/>
+                <AuthRoute path="/signup" component={SignUp} authenticated={authenticated}/>
+                <Route path="/history" component={History} />
+                <Route path="/suggestions" component={Suggestions} />
+                <Route path="/plandetails" component={PlanDetails} />
+                <Route exact path="/" component={Home} />
+              </Switch>
+            </BrowserRouter>
+          </Layout>
+        </ThemeProvider>
+      </div>
+    </Provider>
   );
 }
 
