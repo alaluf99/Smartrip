@@ -1,33 +1,52 @@
-import React from "react";
-import { Form } from "react-final-form";
-import {
-  Paper,
-  Button,
-  CssBaseline,
-  ButtonGroup,
-  Slider,
-} from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+  Button,
 
+  ButtonGroup, CssBaseline, Paper,
+
+
+
+  Slider
+} from "@material-ui/core";
+import {
+  KeyboardDatePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import axios from "axios";
+import React, { useState } from "react";
+import { Form } from "react-final-form";
+import { useHistory } from "react-router";
+import { getHeaders } from "../../../actions/userActions";
+import { serverUrls } from "../../../config/config";
 import "./planning-form-page.css";
 
+
 export default function PlanningFormPage() {
-  const [startDate, setStartDate] = React.useState();
-  const [endDate, setEndDate] = React.useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [numberOfTravelers, setNumberOfTravelers] = useState(1);
+  const [numberOfRooms, setNumberOfRooms] = useState(1);
+  const [error, setError] = useState(null);
+  const [priceRangeValue, setPriceRangeValue] = useState([500, 6000]);
 
-  const [numberOfTravelers, setNumberOfTravelers] = React.useState(0);
-  const [numberOfRooms, setNumberOfRooms] = React.useState(0);
-
-  const [priceRangeValue, setPriceRangeValue] = React.useState([500, 6000]);
+  const history = useHistory();
 
   const onSubmit = async (values) => {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    await sleep(300);
-    window.alert(JSON.stringify(values, 0, 2));
+    axios
+      .get(serverUrls.plan, { headers: getHeaders() })
+      .then((response) => {
+        console.log(response.data.data);
+        const plans = response.data.data;
+
+        history.push({
+          pathname: '/plandetails',
+          state: plans
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err)
+        throw err;
+      });
   };
 
   const marks = [
@@ -69,6 +88,7 @@ export default function PlanningFormPage() {
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
       <CssBaseline />
+      {error}
       <Form
         onSubmit={onSubmit}
         initialValues={{ employed: true, stooge: "larry" }}
@@ -110,7 +130,6 @@ export default function PlanningFormPage() {
                       value={endDate}
                       onChange={(date) => {
                         setEndDate(date);
-                        console.log("blaaaaa");
                       }}
                       KeyboardButtonProps={{
                         "aria-label": "change date",
@@ -137,11 +156,7 @@ export default function PlanningFormPage() {
                     {displayTravelersCounter && (
                       <Button disabled>{numberOfTravelers}</Button>
                     )}
-                    <Button
-                      onClick={() =>
-                        setNumberOfTravelers(numberOfTravelers + 1)
-                      }
-                    >
+                    <Button onClick={() => setNumberOfTravelers(numberOfTravelers + 1)}>
                       +
                     </Button>
                   </ButtonGroup>
@@ -173,7 +188,6 @@ export default function PlanningFormPage() {
                     value={priceRangeValue}
                     onChange={(event, newValue) => {
                       setPriceRangeValue(newValue);
-                      console.log(priceRangeValue);
                     }}
                     valueLabelDisplay="auto"
                     aria-labelledby="range-slider"

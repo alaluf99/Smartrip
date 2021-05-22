@@ -1,0 +1,58 @@
+[
+  {
+    "startDate": "2021-05-20",
+    "endDate": "2021-05-22",
+    "people": 2,
+    "locations": [
+      { "location": "Tel Aviv", "isFlexible": true },
+      {
+        "location": "Eilat",
+        "isFlexible": false,
+        "startDate": "2021-05-21",
+        "endDate": "2021-05-22"
+      }
+    ]
+  },
+  {
+    "startDate": "2021-05-20",
+    "endDate": "2021-05-22",
+    "people": 2,
+    "locations": [
+      { "location": "Tel Aviv", "isFlexible": true },
+      {
+        "location": "Eilat",
+        "isFlexible": false,
+        "startDate": "2021-05-21",
+        "endDate": "2021-05-22"
+      }
+    ]
+  },
+  {
+    "startDate": "2021-05-20",
+    "endDate": "2021-05-22",
+    "people": 2,
+    "locations": [
+      { "location": "Tel Aviv", "isFlexible": true },
+      {
+        "location": "Eilat",
+        "isFlexible": false,
+        "startDate": "2021-05-21",
+        "endDate": "2021-05-22"
+      }
+    ]
+  },
+  {
+    "startDate": "2021-05-20",
+    "endDate": "2021-05-22",
+    "people": 2,
+    "locations": [
+      { "location": "Tel Aviv", "isFlexible": true },
+      {
+        "location": "Eilat",
+        "isFlexible": false,
+        "startDate": "2021-05-21",
+        "endDate": "2021-05-22"
+      }
+    ]
+  }
+]
