@@ -1,9 +1,13 @@
 import { Avatar, Grid, makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import React from "react";
-import { suggestionsData } from '../../models/suggestions';
-import { Suggestion } from '../suggestion';
+import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { getHeaders } from '../../actions/userActions';
+import { serverUrls } from '../../config/config';
+import Error from "../../pages/errorPage/ErrorPage";
+import LoadingPage from '../../pages/loadingPage/LoadingPage';
+import Suggestion from '../suggestion';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,8 +28,29 @@ const useStyles = makeStyles((theme) => ({
 export default function Suggestions() {
     const classes = useStyles();
 
-    return (
-        <div className={classes.root}>
+  const [suggestions, setSuggestions] = useState(null);
+  const [errorLoading, setErrorLoading] = useState(false);
+
+    useEffect(() => {
+        axios
+          .get(serverUrls.suggestions, {headers: getHeaders()})
+          .then((response) => {
+            console.log(response.data.data);
+            setSuggestions(response.data.data);
+          })
+          .catch((err) => {
+            setErrorLoading(true);
+            console.log(err);
+            throw err;
+          });
+      }, []);
+
+      var toReturn = errorLoading ? <Error /> : <LoadingPage />;
+
+      if (suggestions) {
+        toReturn = (
+
+            <div className={classes.root}>
             <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
             </Avatar>
@@ -35,14 +60,17 @@ export default function Suggestions() {
             <Grid container className={classes.root} spacing={2}>
                 <Grid item xs={12}>
                     <Grid container justify="center" spacing={3}>
-                        {[...suggestionsData, ...suggestionsData].map((s) => (
+                        {suggestions.map((s) => (
                             <Grid key={s} item>
-                                { Suggestion(s)}
+                                { <Suggestion plan={s}></Suggestion>}
                             </Grid>
                         ))}
                     </Grid>
                 </Grid>
             </Grid>
         </div>
-    );
+        );
+      }
+    
+      return toReturn;
 }

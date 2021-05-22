@@ -5,7 +5,7 @@ const config = {
 export const serverUrls = {
   history: `${config.serverUrl}/trips/history`,
   plan: `${config.serverUrl}/plan`,
-  suggestions: `${config.serverUrl}/suggestions`,
+  suggestions: `${config.serverUrl}/trips/suggestions`,
   register: `${config.serverUrl}/users/register`,
   login: `${config.serverUrl}/users/login`,
 };

@@ -2,11 +2,9 @@ import { Button, CssBaseline, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Rating from '@material-ui/lab/Rating';
+import React, { useState } from 'react';
 import hotelIcon from './../../../images/hotel.png';
 import Map from './map';
-import React, { useEffect, useState } from 'react';
-import { planTrip } from '../../../actions/planActions';
-import { plansData } from '../../../models/plan';
 
 const useStyles = makeStyles((theme) => (
     {
@@ -34,15 +32,14 @@ const useStyles = makeStyles((theme) => (
         }
     }))
 
-export default function PlanDetails() {
-
-    const plans = plansData
+export default function PlanDetails(props) {
+    const classes = useStyles();
+    const { state } = props.location;
+    const plans = state;
 
     const [plan, setPlan] = useState(plans[0]);
     const [planIndex, setPlanIndex] = useState(0);
     
-    const classes = useStyles();
-
     const updatePlan = (i) => {
         setPlan(plans[i])
         setPlanIndex(i)
@@ -53,6 +50,7 @@ export default function PlanDetails() {
             <CssBaseline />
             <Grid component="main" className={classes.menu} item xs={1}>
                 {
+                    plans.size > 1 ?
                     plans.map((p, i) =>
                         <div>
                             <Grid >
@@ -61,7 +59,7 @@ export default function PlanDetails() {
                             <br></br>
                         </div>
                     )
-                }
+                : null}
             </Grid>
             <Grid item xs={5} className={classes.paper} square>
                 <div component="main" maxWidth="xs">
@@ -90,7 +88,7 @@ export default function PlanDetails() {
                                 justify="space-between"
                                 spacing={3}
                             >
-                                {plan.sections.map(section =>
+                                {plan.sections ? plan.sections.map(section =>
                                     <Grid item
                                         container
                                         direction="row"
@@ -104,7 +102,7 @@ export default function PlanDetails() {
                                         <Typography>{section.fromDate} - {section.toDate}</Typography>
                                         <Typography>{section.price}$</Typography>
                                     </Grid>
-                                )}
+                                ) : null}
                             </Grid>
                         </div>
                     </div>
@@ -112,7 +110,9 @@ export default function PlanDetails() {
 
             </Grid>
             <Grid item xs={5} elevation={6} square>
+            { plan.sections ?
                 <Map locations={plan.sections.map(l => { return { "location": l.accommodation.location, "name": l.accommodation.accommodationName } })} />
+                : null }
             </Grid>
         </Grid>
     );
