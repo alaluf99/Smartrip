@@ -8,6 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { React } from "react";
+import { useHistory } from "react-router";
 import newYorkImage from "./../../images/newYork.jpg";
 
 const useStyles = makeStyles({
@@ -45,50 +46,58 @@ const useStyles = makeStyles({
 
 export default function PlanSummery(props) {
   const classes = useStyles();
+  const history = useHistory();
+
+  const { plan } = props;
+
+  const handleMoreInfo = () => {
+    history.push({
+      pathname: '/plandetails',
+      state: [plan]
+    });
+  }
 
   return (
     <div className={classes.root}>
-      {props.plans.map((plan) => (
-        <Card key={plan.planId} className={classes.card}>
-          <CardActionArea>
-            <CardMedia
-              className={classes.media}
-              image={newYorkImage}
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {plan.startDate} - {plan.endDate}
+      <Card key={plan.planId} className={classes.card}>
+        <CardActionArea>
+          <CardMedia
+            className={classes.media}
+            image={newYorkImage}
+            title="Contemplative Reptile"
+          />
+          <CardContent>
+            <Typography color="textSecondary" gutterBottom>
+              {plan.startDate} - {plan.endDate}
+            </Typography>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h2"
+              className={classes.title}
+            >
+              My trip
               </Typography>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="h2"
-                className={classes.title}
-              >
-                My trip
-              </Typography>
-              <Typography
-                variant="body2"
-                component="p"
-                className={classes.content}
-              >
-                number of adults: {plan.adultsNumber}
-                <br />
+            <Typography
+              variant="body2"
+              component="p"
+              className={classes.content}
+            >
+              number of adults: {plan.adultsNumber}
+              <br />
                 number of children: {plan.childrenNumber}
-                <br />
-                total price: {plan.totalPrice}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <Divider className={classes.divider} light />
-          <CardActions>
-            <Button size="small" color="primary">
-              More info
+              <br />
+                total price: {plan.totaPrice}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <Divider className={classes.divider} light />
+        <CardActions>
+          <Button size="small" color="primary" onClick={handleMoreInfo}>
+            More info
             </Button>
-          </CardActions>
-        </Card>
-      ))}
+        </CardActions>
+      </Card>
     </div>
   );
 }

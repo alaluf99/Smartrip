@@ -28,9 +28,6 @@ export default function Menu() {
     <div className={classes.root}>
       <AppBar position="static" color='default'>
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
           <Button edge="start" href="/">
             <Typography variant="h4" className={classes.title}>SmartTrip</Typography></Button>
           <Button color="inherit" href="history">My History</Button>

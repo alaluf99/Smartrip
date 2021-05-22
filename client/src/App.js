@@ -44,9 +44,6 @@ function App() {
           </BrowserRouter>
         </Layout>
       </ThemeProvider>
-
-
-
     </div>
   );
 }
