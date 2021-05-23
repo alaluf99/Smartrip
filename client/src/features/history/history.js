@@ -1,11 +1,12 @@
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useState, useEffect } from "react";
-import PlanSummery from "../plan/plan-summery";
+import React, { useEffect, useState } from "react";
+import { getHeaders } from "../../actions/userActions";
 import axios from "../../axios-smartTrip";
-import serverEndPoints from "../../config/serverEndPoints";
+import { serverUrls } from "../../config/config";
 import Error from "../../pages/errorPage/ErrorPage";
 import LoadingPage from "../../pages/loadingPage/LoadingPage";
+import PlanSummery from "../plan/plan-summery";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -16,12 +17,10 @@ export default function History() {
   const [errorLoading, setErrorLoading] = useState(false);
 
   useEffect(() => {
-    // Update the document title using the browser API
     axios
-      .get(serverEndPoints.plansHistory)
+      .get(serverUrls.history, { headers: getHeaders() })
       .then((response) => {
-        console.log(JSON.stringify(response.data));
-        setPlansHistory(response.data);
+        setPlansHistory(response.data.data);
       })
       .catch((err) => {
         setErrorLoading(true);
@@ -37,7 +36,9 @@ export default function History() {
       <div>
         <Container>
           <h1>My History</h1>
-          <PlanSummery plans={plansHistory} />
+          {
+            plansHistory.map((plan) => { return <PlanSummery plan={plan} /> })
+          }
         </Container>
       </div>
     );

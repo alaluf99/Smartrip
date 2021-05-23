@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { serverUrls } from '../config/config';
 
 export const loginUser = (userData, history) => {
-    axios.post('http://localhost:3000/api/users/login', userData)
+    axios.post(serverUrls.login, userData)
         .then((res) => {
             setAuthorizationHeader(res.data.token);
             history.push('/');
@@ -9,7 +10,7 @@ export const loginUser = (userData, history) => {
 }
 
 export const signupUser = (newUserData, history) => {
-    axios.post('http://localhost:3000/api/users/register', newUserData)
+    axios.post(serverUrls.register, newUserData)
         .then((res) => {
             setAuthorizationHeader(res.data.token);
             history.push('/');
@@ -18,6 +19,11 @@ export const signupUser = (newUserData, history) => {
 export const logoutUser = () => {
     localStorage.removeItem('FBIdToken');
     delete axios.defaults.headers.common['Authorization'];
+}
+
+export const getHeaders = () => {
+    const token = localStorage.getItem('FBIdToken');
+    return {'Authorization': token}
 }
 
 const setAuthorizationHeader = (token) => {
