@@ -1,7 +1,55 @@
 const usersService = require('../services/usersService');
 const { validateSignupData, validateLoginData, } = require("../utils/validators");
+const { admin, db } = require('../utils/admin');
 
 const UsersController = {
+
+    async getUserByEmail(req, res) {
+        try {
+            const userEmail = req.body.email;
+            let user = await usersService.getUserByEmail(userEmail);
+            return res.status(200).json({ user });
+        } catch(err) {
+            console.error(err);
+            return res
+                .status(500)
+                .json({ error: err.message });
+            
+        }
+    },
+
+    async getUser(req, res) {
+        let idToken;
+        if (
+          req.headers.authorization &&
+          req.headers.authorization.startsWith('Bearer ')
+        ) {
+          idToken = req.headers.authorization.split('Bearer ')[1];
+        } else {
+          console.error('No token found');
+          return res.status(403).json({ error: 'Unauthorized' });
+        }
+      
+        admin
+          .auth()
+          .verifyIdToken(idToken)
+          .then((decodedToken) => {
+            req.user = decodedToken;
+            return db
+              .collection('users')
+              .where('userId', '==', req.user.uid)
+              .limit(1)
+              .get();
+          })
+          .then((data) => {
+            let user = data.docs[0].data();
+            return res.status(200).json({ user });
+          })
+          .catch((err) => {
+            console.error('Error while verifying token ', err);
+            return res.status(403).json(err);
+          });
+    },
 
     async registerUser(req, res) {
         const newUser = {

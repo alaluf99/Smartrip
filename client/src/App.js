@@ -11,21 +11,25 @@ import Suggestions from "./features/plan/suggestions";
 import SignUp from "./features/sign-up/sign-up";
 import Layout from "./hoc/layout/Layout";
 import jwtDecode from 'jwt-decode';
-import { AuthRoute } from './util/AuthRoute';
+import AuthRoute from './util/AuthRoute';
+import axios from 'axios';
 
 // Redux
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import { SET_AUTHENTICATED } from './redux/types';
+import { logoutUser, getUserData } from './redux/actions/userActions';
 
-let authenticated;
 const token = localStorage.FBIdToken;
 if(token) {
   const decodedToken = jwtDecode(token);
   if(decodedToken.exp * 1000 < Date.now()) {
-    window.location.href = '/login'
-    authenticated = false;
+    store.dispatch(logoutUser());
+    window.location.href = '/login';
   } else {
-    authenticated = true;
+    store.dispatch({ type: SET_AUTHENTICATED });
+    axios.defaults.headers.common['Authorization'] = token;
+    store.dispatch(getUserData());
   }
 }
 
@@ -38,12 +42,12 @@ function App() {
           <Layout>
             <BrowserRouter>
               <Switch>
-                <Route path="/planning" component={PlanningFormPage} />
-                <AuthRoute path="/login" component={Login} authenticated={authenticated}/>
-                <AuthRoute path="/signup" component={SignUp} authenticated={authenticated}/>
-                <Route path="/history" component={History} />
-                <Route path="/suggestions" component={Suggestions} />
-                <Route path="/plandetails" component={PlanDetails} />
+                <AuthRoute path="/planning" component={PlanningFormPage} />
+                <Route path="/login" component={Login} />
+                <Route path="/signup" component={SignUp} />
+                <AuthRoute path="/history" component={History} />
+                <AuthRoute path="/suggestions" component={Suggestions} />
+                <AuthRoute path="/plandetails" component={PlanDetails} />
                 <Route exact path="/" component={Home} />
               </Switch>
             </BrowserRouter>

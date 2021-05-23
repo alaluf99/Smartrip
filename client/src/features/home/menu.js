@@ -6,6 +6,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import React from 'react';
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../../redux/actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Menu() {
   const classes = useStyles();
+  let isAuthenticated = useSelector(state => state.user.authenticated);
+  const dispatch = useDispatch();
 
   return (
     <div className={classes.root}>
@@ -33,12 +38,21 @@ export default function Menu() {
           </IconButton>
           <Button edge="start" href="/">
             <Typography variant="h4" className={classes.title}>SmartTrip</Typography></Button>
-          <Button color="inherit" href="history">My History</Button>
-          <Button color="inherit" href="login">Login</Button>
-          <Button color="inherit" href="signup">Sign up</Button>
-          <Button color="inherit" href="suggestions">Suggestions</Button>
-          <Button color="inherit" href="planning">Planning</Button>
-          <Button color="inherit" href="plandetails">Plan details</Button>
+
+          { isAuthenticated ? 
+              <>
+                <Button color="inherit" href="history">My History</Button>
+                <Button color="inherit" href="suggestions">Suggestions</Button>
+                <Button color="inherit" href="planning">Planning</Button>
+                <Button color="inherit" href="plandetails">Plan details</Button>
+                <Button color="inherit" onClick={()=>dispatch(logoutUser())}>Log out</Button>
+              </>
+            :
+            <>
+              <Button color="inherit" href="login">Login</Button>
+              <Button color="inherit" href="signup">Sign up</Button>
+            </>
+          }
         </Toolbar>
       </AppBar>
     </div>

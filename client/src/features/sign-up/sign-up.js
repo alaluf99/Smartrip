@@ -12,7 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React, {useState} from 'react';
 import { useHistory } from "react-router-dom";
-import { signupUser } from '../../actions/userActions';
+// Redux
+import { useDispatch } from 'react-redux';
+import { signupUser } from '../../redux/actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,6 +43,7 @@ export default function SignUp() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   let history = useHistory();
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -50,7 +53,7 @@ export default function SignUp() {
         lastName: lastName,
         password: password
     };
-    signupUser(newUserData, history);
+    dispatch(signupUser(newUserData, history));
   }
 
   return (

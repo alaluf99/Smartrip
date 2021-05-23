@@ -25,10 +25,27 @@ export const loginUser = (userData, history) => (dispatch) => {
         })
 }
 
+export const signupUser = (newUserData, history) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios.post('http://localhost:3000/api/users/register', newUserData)
+      .then((res) => {
+          setAuthorizationHeader(res.data.token);
+          dispatch(getUserData());
+          dispatch({ type: CLEAR_ERRORS });
+          history.push('/');
+      })
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response.data
+        });
+      })
+}
+
 export const getUserData = () => (dispatch) => {
     dispatch({ type: LOADING_USER });
     axios
-      .get('/user')
+      .get('http://localhost:3000/api/users')
       .then((res) => {
         dispatch({
           type: SET_USER,
@@ -37,6 +54,13 @@ export const getUserData = () => (dispatch) => {
       })
       .catch((err) => console.log(err));
   };
+
+export const logoutUser = () => (dispatch) => {
+  localStorage.removeItem('FBIdToken');
+  delete axios.defaults.headers.common['Authorization'];
+  dispatch({ type: SET_UNAUTHENTICATED });
+  window.location.href = '/';
+};
 
 const setAuthorizationHeader = (token) => {
     const FBIdToken = `Bearer ${token}`;

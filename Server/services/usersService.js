@@ -2,6 +2,20 @@ const { firebase, db } = require('../utils/admin');
 
 const usersService = {
 
+    // async getUserByEmail(email) {
+    //     try{
+    //         let doc = await db.collection('users').where('email','==',email).limit(1).get();
+    //         if(doc.empty) {
+    //             return ({ email: "this email is not exists" });
+    //         }
+    //         let user = doc.docs[0].data();
+    //         return user;
+    //     } catch(err) {
+    //         console.log(e);
+    //         throw Error(e);
+    //     }
+    // },
+
     async registerUser(newUser) {
         try{
             let token, userId;

@@ -6,4 +6,6 @@ usersRouter.post('/login', UsersController.loginUser);
 
 usersRouter.post('/register', UsersController.registerUser);
 
+usersRouter.get('/', UsersController.getUser);
+
 module.exports = usersRouter;

@@ -14,10 +14,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import vacationImage from './../../images/vacation.jfif'
 import { useHistory } from "react-router-dom";
-//import { loginUser } from '../../actions/userActions';
 
 // Redux
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { loginUser } from '../../redux/actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,11 +50,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Login() {
+export default function Login() {
     const classes = useStyles();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     let history = useHistory();
+    const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -63,7 +63,7 @@ function Login() {
             email: email,
             password: password
         };
-        loginUser(userData, history);
+        dispatch(loginUser(userData, history));
     }
 
     return (
@@ -138,14 +138,3 @@ function Login() {
         </Grid>
     );
 }
-
-const mapStateToProps = (state) => ({
-    user: state.user,
-    UI: state.UI
-  });
-  
-const mapActionsToProps = {
-loginUser
-};
-
-export default connect(mapStateToProps, mapActionsToProps)(Login);
