@@ -13,7 +13,7 @@ const tripsController = {
   async addNewTrip(req, res) {},
   async planTrip(req, res) {
     try {
-      var plan = await tripsService.planTrip(req.plan);
+      var plan = await tripsService.planTrip(req.body);
       return res.status(200).json({ data: plan });
     } catch (e) {
       console.error(e);
@@ -22,7 +22,9 @@ const tripsController = {
   },
   async getSuggestions(req, res) {
     try {
-      var plan = await tripsService.getSuggestions();
+      var plan = await tripsService.getSuggestions(
+        req.header("numberOfSuggestions")
+      );
       return res.status(200).json({ data: plan });
     } catch (e) {
       console.error(e);

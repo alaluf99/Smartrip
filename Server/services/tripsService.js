@@ -26,108 +26,28 @@ const tripsService = {
       return { error: "user not found" };
     }
   },
-  async planTrip(plan) {
-    //const suggestions = this.hotelService.planTrip(plan);
-    const suggestions = [
-      {
-        sections: [
-          {
-            accommodation: {
-              accommodationName: "Bereshit",
-              city: "Haifa",
-              location: {
-                Latitude: 20,
-                Longitude: 20,
-              },
-              rating: 5,
-              link: "http://hotel",
-            },
-            fromDate: "5/3/2021",
-            toDate: "8/3/2021",
-            price: 600,
-          },
-          {
-            accommodation: {
-              accommodationName: "Gordon",
-              city: "Tel-Aviv",
-              location: {
-                Latitude: 10,
-                Longitude: 10,
-              },
-              rating: 4,
-              link: "http://hotel",
-            },
-            fromDate: "3/3/2021",
-            toDate: "3/5/2021",
-            price: 200,
-          },
-        ],
-        adultsNumber: 2,
-        childrenNumber: 0,
-        creationDate: "3/2/2021",
-        startDate: "3/3/2021",
-        endDate: "3/4/2021",
-        totaPrice: 800,
-        userId: "xwXYUprVZnTHNCauVLo2SNBFSsq2",
-      },
-    ];
-    return suggestions;
+  async planTrip(planReq) {
+    let plan = await hotelsBL.calculateTrip(planReq);
+    return plan;
   },
-  async getSuggestions() {
-    //const suggestions = this.hotelService.planTrip(plan);
-    const suggestions = [
-      {
-        sections: [
-          {
-            accommodation: {
-              accommodationName: "Bereshit",
-              city: "Haifa",
-              location: {
-                Latitude: 20,
-                Longitude: 20,
-              },
-              rating: 5,
-              link: "http://hotel",
-            },
-            fromDate: "3/5/2021",
-            toDate: "3/8/2021",
-            price: 600,
-          },
-          {
-            accommodation: {
-              accommodationName: "Gordon",
-              city: "Tel-Aviv",
-              location: {
-                Latitude: 10,
-                Longitude: 10,
-              },
-              rating: 4,
-              link: "http://hotel",
-            },
-            fromDate: "3/3/2021",
-            toDate: "3/5/2021",
-            price: 200,
-          },
-        ],
-        adultsNumber: 2,
-        childrenNumber: 0,
-        creationDate: "3/2/2021",
-        startDate: "3/3/2021",
-        endDate: "3/4/2021",
-        totaPrice: 800,
-        userId: "xwXYUprVZnTHNCauVLo2SNBFSsq2",
-      },
-    ];
+  async getSuggestions(numberOfSuggestions) {
+    if (!numberOfSuggestions) {
+      numberOfSuggestions = 4;
+    }
+    let plans;
+    let promises = [];
+    randomSuggestionsOptions = getRandom(
+      suggestionsOptions,
+      numberOfSuggestions
+    );
 
-    // let plans;
-    // let promises = [];
-    // suggestionsOptions.forEach((tripOptions) => {
-    //   promises.push(hotelsBL.calculateTrip(tripOptions));
-    // });
+    randomSuggestionsOptions.forEach((tripOptions) => {
+      promises.push(hotelsBL.calculateTrip(tripOptions));
+    });
 
-    // plans = await Promise.all(promises);
+    plans = await Promise.all(promises);
 
-    return suggestions;
+    return plans;
   },
 };
 
@@ -162,6 +82,20 @@ sectionHelper = async (sectionId) => {
     if (newSection.accommodationRef) delete newSection.accommodationRef;
   }
   return newSection;
+};
+
+getRandom = (arr, n) => {
+  var result = new Array(n),
+    len = arr.length,
+    taken = new Array(len);
+  if (n > len)
+    throw new RangeError("getRandom: more elements taken than available");
+  while (n--) {
+    var x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
+  }
+  return result;
 };
 
 module.exports = tripsService;
