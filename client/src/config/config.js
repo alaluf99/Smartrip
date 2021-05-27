@@ -1,5 +1,5 @@
-const config = {
-  serverUrl: "http://localhost:3001/api",
+export const config = {
+  serverUrl: "http://193.106.55.133:3001/api",
 };
 
 export const serverUrls = {
