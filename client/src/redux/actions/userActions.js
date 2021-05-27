@@ -11,7 +11,7 @@ import config from "../../config/config";
 
 export const loginUser = (userData, history) => (dispatch) => {
     dispatch({ type: LOADING_UI });
-    axios.post('http://smartrip.cs.colman.ac.il/api/users/login', userData)
+    axios.post('http://smartrip.cs.colman.ac.il:3001/api/users/login', userData)
         .then((res) => {
             setAuthorizationHeader(res.data.token);
             dispatch(getUserData());
@@ -28,7 +28,7 @@ export const loginUser = (userData, history) => (dispatch) => {
 
 export const signupUser = (newUserData, history) => (dispatch) => {
   dispatch({ type: LOADING_UI });
-  axios.post('http://smartrip.cs.colman.ac.il/api/users/register', newUserData)
+  axios.post('http://smartrip.cs.colman.ac.il:3001/api/users/register', newUserData)
       .then((res) => {
           setAuthorizationHeader(res.data.token);
           dispatch(getUserData());
@@ -46,7 +46,7 @@ export const signupUser = (newUserData, history) => (dispatch) => {
 export const getUserData = () => (dispatch) => {
     dispatch({ type: LOADING_USER });
     axios
-      .get(  'http://smartrip.cs.colman.ac.il/api/users')
+      .get(  'http://smartrip.cs.colman.ac.il:3001/api/users')
       .then((res) => {
         dispatch({
           type: SET_USER,
