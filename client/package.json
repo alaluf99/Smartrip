@@ -37,9 +37,9 @@
     "unirest": "^0.6.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -58,7 +58,5 @@
     ]
   },
   "proxy": "http://localhost:5000/smart-trip-4223b/us-central1/api",
-  "devDependencies": {
-    "react-app-rewired": "^2.1.8"
-  }
+  "devDependencies": {}
 }
