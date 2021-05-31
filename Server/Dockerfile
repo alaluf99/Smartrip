@@ -1,6 +1,8 @@
 FROM node:12.19.0-alpine3.9
 
-WORKDIR /usr/src/app
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+
+WORKDIR /home/node/app
 
 COPY package*.json ./
 
