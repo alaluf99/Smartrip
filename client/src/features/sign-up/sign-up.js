@@ -14,7 +14,7 @@ import React, {useState} from 'react';
 import { useHistory } from "react-router-dom";
 // Redux
 import { useDispatch } from 'react-redux';
-import { signupUser } from '../../redux/actions/userActions';
+import { signupUser } from '../../actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {

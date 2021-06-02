@@ -17,7 +17,7 @@ import { useHistory } from "react-router-dom";
 
 // Redux
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/actions/userActions';
+import { loginUser } from '../../actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
     root: {

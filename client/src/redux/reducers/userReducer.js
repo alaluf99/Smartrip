@@ -1,10 +1,6 @@
-import { SET_USER, 
-    SET_AUTHENTICATED, 
-    SET_UNAUTHENTICATED, 
-    LOADING_USER,
-    LOADING_UI,
-    SET_ERRORS,
-    CLEAR_ERRORS
+import {
+  LOADING_USER, SET_AUTHENTICATED,
+  SET_UNAUTHENTICATED, SET_USER
 } from '../types';
 
 const initialState = {
