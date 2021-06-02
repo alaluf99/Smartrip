@@ -18,7 +18,7 @@ import axios from 'axios';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { SET_AUTHENTICATED } from './redux/types';
-import { logoutUser, getUserData } from './redux/actions/userActions';
+import { logoutUser, getUserData } from './actions/userActions';
 
 const token = localStorage.FBIdToken;
 if(token) {

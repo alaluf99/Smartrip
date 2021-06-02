@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { serverUrls } from '../config/config';
 
 export const planTrip = (plan) => {
-    axios.post('http://smartrip.cs.colman.ac.il:3001/api/trips/plan', {plan: plan})
+    axios.post(serverUrls.plan, {plan: plan})
         .then((res) => {
             return res.data
         })

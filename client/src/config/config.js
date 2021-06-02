@@ -4,10 +4,11 @@ export const config = {
 
 export const serverUrls = {
   history: `${config.serverUrl}/trips/history`,
-  plan: `${config.serverUrl}/plan`,
+  plan: `${config.serverUrl}/trips/plan`,
   suggestions: `${config.serverUrl}/trips/suggestions`,
   register: `${config.serverUrl}/users/register`,
   login: `${config.serverUrl}/users/login`,
+  users: `${config.serverUrl}/users`,
 };
 
 export default config;

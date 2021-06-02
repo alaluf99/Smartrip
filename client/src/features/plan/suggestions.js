@@ -33,7 +33,7 @@ export default function Suggestions() {
 
     useEffect(() => {
         axios
-          .get(serverUrls.suggestions, {headers: getHeaders()})
+          .get(serverUrls.suggestions)
           .then((response) => {
             console.log(response.data.data);
             setSuggestions(response.data.data);

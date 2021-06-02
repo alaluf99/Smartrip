@@ -18,7 +18,7 @@ export default function History() {
 
   useEffect(() => {
     axios
-      .get(serverUrls.history, { headers: getHeaders() })
+      .get(serverUrls.history)
       .then((response) => {
         setPlansHistory(response.data.data);
       })
