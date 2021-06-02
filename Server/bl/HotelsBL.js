@@ -298,16 +298,25 @@ const HotelsBL = {
 
         var currNode = "endNode";
         var path = [];
+        var totalPrice = 0;
+        var startDate, endDate;
+
+        endDate = graph.node(dijkstraResults[currNode].predecessor).checkOut;
 
         while (currNode !== "startNode" && currNode !== null) {
             currNode = dijkstraResults[currNode].predecessor
 
             if (currNode !== "startNode") {
-                path.push(graph.node(currNode));
+                let currHotel = graph.node(currNode);
+                path.push(currHotel);
+                totalPrice += parseInt(currHotel.price);
+                startDate = currHotel.checkIn;
             }
         }
         
-        return path.reverse();
+
+
+        return [{"path": {"hotels": path.reverse(), "startDate": startDate, "endDate": endDate, "totalPrice": totalPrice}}];
     }
 }
 
