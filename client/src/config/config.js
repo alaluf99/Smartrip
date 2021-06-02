@@ -1,5 +1,5 @@
-const config = {
-  serverUrl: "http://localhost:3000/api",
+export const config = {
+  serverUrl: "http://smartrip.cs.colman.ac.il:3001/api",
 };
 
 export const serverUrls = {

@@ -12,7 +12,7 @@ const HotelsBL = {
 
         var graph = await HotelsBL.getHotelsGraph(options, requestData.startDate , requestData.endDate);
 
-        var path = await HotelsBL.getBestPathes(graph);
+        var path = await HotelsBL.getBestPathes(graph, HotelsBL.getLocationsDaysJSON(requestData.locations));
 
         return path;
     },
@@ -111,12 +111,12 @@ const HotelsBL = {
             // running on all of the not flexible locations to mark the dates as not flexible.
             for (var i = 0; i < notflexibleLocations.length; i++) {
                 var currLocation = notflexibleLocations[i];
+                let locationStartDate = new Date(currLocation.startDate);
+                let locationEndDate = new Date(currLocation.endDate);
+                    
                 for (date of datesBetween) {
                     // if it is a date of other location that isn't flexible then there is no need to check
                     if (date.notFlexIndex == null) {
-                        let locationStartDate = new Date(currLocation.startDate);
-                        let locationEndDate = new Date(currLocation.endDate);
-
                         if (locationStartDate <= date.date && locationEndDate >= date.date) {
                             date.notFlexIndex = i;
                         }
@@ -126,23 +126,38 @@ const HotelsBL = {
 
             // for each pair of dates, insert it into the array
             for (var i = 0; i < datesBetween.length - 1; i++) {
-                for (var j = i + 1; j < datesBetween.length; j++) {
+                let mandatoryInTheMiddle = false;
+
+                for (var j = i + 1; j < datesBetween.length && !mandatoryInTheMiddle; j++) {
                     var firstDate = datesBetween[i];
                     var secondDate = datesBetween[j];
 
                     // if there is a mandatory location for those dates (must be the same),
                     // than adding only this location as an option
-                    if (firstDate.notFlexIndex && secondDate.notFlexIndex && (firstDate.notFlexIndex == secondDate.notFlexIndex)) {
+                    if ((firstDate.notFlexIndex != null) && (secondDate.notFlexIndex != null) && 
+                        (firstDate.notFlexIndex == secondDate.notFlexIndex)) {
                         datesPairs.push({checkIn: firstDate.date.toISOString().split("T")[0],
                                      checkOut: secondDate.date.toISOString().split("T")[0],
-                                     location: notflexibleLocations[firstDate.notFlexIndex]})
-                    } else if(!firstDate.notFlexIndex && !secondDate.notFlexIndex) {
+                                     location: notflexibleLocations[firstDate.notFlexIndex].location})
+                    } // else, if both the dates not mandatory for a location, or the second date is
+                      // the first date of a mandatory date for location (because we leave in the morning and get
+                      // to the hotel in the afternoon)
+                    else if(((firstDate.notFlexIndex == null) && (secondDate.notFlexIndex == null)) ||
+                            ((firstDate.notFlexIndex == null) && (secondDate.notFlexIndex != null) && 
+                             (datesBetween[j - 1].notFlexIndex == null))) {
+                        // calculating the nights between the dates to see if a location is more nights then needed
+                        var nightsBetween = Math.ceil((Math.abs(secondDate.date.getTime() - firstDate.date.getTime())) / (1000 * 3600 * 24));
+                        
                         // adding an option for this dates pair for all the locations
                         for (var loc of flexibleLocations) {
-                            datesPairs.push({checkIn: firstDate.date.toISOString().split("T")[0],
-                                        checkOut: secondDate.date.toISOString().split("T")[0],
-                                        location: loc.location});
+                            if(loc.numberOfDays >= nightsBetween) {
+                                datesPairs.push({checkIn: firstDate.date.toISOString().split("T")[0],
+                                            checkOut: secondDate.date.toISOString().split("T")[0],
+                                            location: loc.location});
+                            }
                         }
+                    } else {
+                        mandatoryInTheMiddle = true;
                     }
                 }
             }
@@ -177,7 +192,7 @@ const HotelsBL = {
             //var nightsInFirstHotel = Math.ceil((Math.abs(checkOutDate.getTime() - checkInDate.getTime())) / (1000 * 3600 * 24));
 
             // find a weight to add here, maybe based on distance and price
-            var weight = from.price - from.star;
+            var weight = from.price - from.star - from.score;
             
             // if this is a starting edge, 
             if (from.checkIn === startCheckIn) {
@@ -211,12 +226,32 @@ const HotelsBL = {
     },
 
     /**
+     * The function will return a variable that hold location name as key and number of days there as value
+     * @param {*} locations 
+     * @returns 
+     */
+     getLocationsDaysJSON(locations) {
+        let daysForLocations = {};
+
+        for (let loc of locations) {
+            if (loc.isFlexible) {
+                daysForLocations[loc.location] = loc.numberOfDays
+            } else {
+                daysForLocations[loc.location] = 
+                    Math.ceil((Math.abs((new Date(loc.startDate)).getTime() - (new Date(loc.endDate)).getTime())) / (1000 * 3600 * 24));
+            }
+        }
+
+        return daysForLocations;
+    },
+
+    /**
      * The function return a sorted array of options. 
      * Each option is a path that was found to be "the best" path
      * Returns an array with pathes
      * @param {*} graph - a weighted directed graph that we want to run distance vector algorithem on.
      */
-    async getBestPathes(graph) {
+    async getBestPathes(graph, locationsRequest) {
         
         var dijkstraResults = algs.dijkstra(graph, "startNode", function(edge, pathsSoFar, w) {
             // if we already found a path up till this node and it's not the endNode
@@ -224,12 +259,20 @@ const HotelsBL = {
                 var currNode = edge.v;
                 var nextNode = graph.node(edge.w);
                 var locations = [];
+                var daysInLocation = {};
 
                 // getting all of the locations we already been into
                 while (currNode !== "startNode") {
                     var node = graph.node(currNode);
                     if (locations.indexOf(node.location) == -1) {
                         locations.push(node.location);
+                    }
+
+                    var nigthsInNode = Math.ceil((Math.abs((new Date(node.checkIn)).getTime() - (new Date(node.checkOut)).getTime())) / (1000 * 3600 * 24));
+                    if (daysInLocation[node.location] == null ) {
+                        daysInLocation[node.location] = nigthsInNode;
+                    } else {
+                        daysInLocation[node.location] += nigthsInNode;
                     }
                     
                     currNode = pathsSoFar[currNode].predecessor
@@ -240,6 +283,13 @@ const HotelsBL = {
                 var index = locations.indexOf(nextNode.location);
                 if (index != -1 && index != 0) {
                     return Number.POSITIVE_INFINITY;
+                } else {
+                    var nigthsInNextNode = Math.ceil((Math.abs((new Date(nextNode.checkIn)).getTime() - (new Date(nextNode.checkOut)).getTime())) / (1000 * 3600 * 24));
+
+                    if ((daysInLocation[nextNode.location] != null?daysInLocation[nextNode.location] != null:0) 
+                            + nigthsInNextNode > locationsRequest[nextNode.location]) {
+                        return Number.POSITIVE_INFINITY;
+                    }
                 }
             }
 

@@ -2,10 +2,12 @@ FROM node:12.19.0-alpine3.9
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+#COPY package*.json ./
 
 RUN npm install
 
 COPY . .
 
-RUN npm run start
+RUN npm run build
+
+CMD ["node", "dist/app.js"]
