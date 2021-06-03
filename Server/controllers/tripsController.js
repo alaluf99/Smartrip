@@ -3,7 +3,8 @@ var tripsService = require("../services/tripsService");
 const tripsController = {
   async getTrips(req, res) {
     try {
-      var trips = await tripsService.getTrips(req.user.email);
+      //var trips = await tripsService.getTrips(req.user.email);
+      var trips = await tripsService.getTripsByUserId(req.user.user_id);
       return res.status(200).json({ data: trips });
     } catch (e) {
       console.error(e);

@@ -26,14 +26,23 @@ const tripsService = {
       return { error: "user not found" };
     }
   },
-  async planTrip(planReq) {
+  async getTripsByUserId(userId) {
+    let trips = [];
+    const snapshot = await db.collection("trips").where("userId", "==", userId).get();
+    snapshot.forEach(doc => {
+      trips.push(doc.data());
+    });
+    return trips;
+  },
+  async planTrip(planReq, userId) {
+    planReq.userId = userId;
     await db.collection('trips').add(planReq);
     let plan = await hotelsBL.calculateTrip(planReq);
     return plan;
   },
   async getSuggestions(numberOfSuggestions) {
     if (!numberOfSuggestions) {
-      numberOfSuggestions = 4;
+      numberOfSuggestions = 2;
     }
     let plans;
     let promises = [];

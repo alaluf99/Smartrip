@@ -16,9 +16,12 @@ export default function History() {
   const [plansHistory, setPlansHistory] = useState(null);
   const [errorLoading, setErrorLoading] = useState(false);
 
+  const headers = {
+    'Authorization': localStorage.FBIdToken
+  }
   useEffect(() => {
     axios
-      .get(serverUrls.history)
+      .get(serverUrls.history, {headers})
       .then((response) => {
         setPlansHistory(response.data.data);
       })
