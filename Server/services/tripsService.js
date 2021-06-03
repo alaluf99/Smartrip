@@ -27,6 +27,7 @@ const tripsService = {
     }
   },
   async planTrip(planReq) {
+    await db.collection('trips').add(planReq);
     let plan = await hotelsBL.calculateTrip(planReq);
     return plan;
   },
