@@ -316,7 +316,7 @@ const HotelsBL = {
         
 
 
-        return [{"path": {"hotels": path.reverse(), "startDate": startDate, "endDate": endDate, "totalPrice": totalPrice}}];
+        return [{"path": path.reverse(), "startDate": startDate, "endDate": endDate, "totalPrice": totalPrice}];
     }
 }
 
