@@ -4,7 +4,7 @@ const tripsController = {
   async getTrips(req, res) {
     try {
       //var trips = await tripsService.getTrips(req.user.email);
-      var trips = await tripsService.getTripsByUserId('7rw5vtEAe1WcvrQj0hCzLtXaoiy1');
+      var trips = await tripsService.getTripsByUserId(req.user.user_id);
       return res.status(200).json({ data: trips });
     } catch (e) {
       console.error(e);
@@ -14,7 +14,7 @@ const tripsController = {
   async addNewTrip(req, res) {},
   async planTrip(req, res) {
     try {
-      var plan = await tripsService.planTrip(req.body, '7rw5vtEAe1WcvrQj0hCzLtXaoiy1');
+      var plan = await tripsService.planTrip(req.body, req.user.user_id);
       return res.status(200).json({ data: plan });
     } catch (e) {
       console.error(e);
