@@ -1,5 +1,6 @@
 var Graph = require("@dagrejs/graphlib").Graph;
 var algs = require("@dagrejs/graphlib").alg;
+var dataStruct = require("@dagrejs/graphlib").data;
 var HotelsApiService = require("../services/HotelsApiService");
 const graphOptions = {
                         directed: true
@@ -12,7 +13,9 @@ const HotelsBL = {
 
         var graph = await HotelsBL.getHotelsGraph(options, requestData.startDate , requestData.endDate);
 
-        var path = await HotelsBL.getBestPathes(graph, HotelsBL.getLocationsDaysJSON(requestData.locations));
+        //var path = await HotelsBL.getBestPathes(graph, HotelsBL.getLocationsDaysJSON(requestData.locations));
+
+        var path = await HotelsBL.calculateAllPathes(graph, HotelsBL.getLocationsDaysJSON(requestData.locations));
 
         return path;
     },
@@ -281,12 +284,12 @@ const HotelsBL = {
                 // if the next locations isn't like the last hotel and isn't new location,
                 // the weight is infinity so we won't go back to an old location
                 var index = locations.indexOf(nextNode.location);
-                if (index != -1 && index != 0) {
+                if (index != -1 && index != locations.length - 1) {
                     return Number.POSITIVE_INFINITY;
                 } else {
                     var nigthsInNextNode = Math.ceil((Math.abs((new Date(nextNode.checkIn)).getTime() - (new Date(nextNode.checkOut)).getTime())) / (1000 * 3600 * 24));
 
-                    if ((daysInLocation[nextNode.location] != null?daysInLocation[nextNode.location] != null:0) 
+                    if (((daysInLocation[nextNode.location] != null) ? daysInLocation[nextNode.location] : 0) 
                             + nigthsInNextNode > locationsRequest[nextNode.location]) {
                         return Number.POSITIVE_INFINITY;
                     }
@@ -317,7 +320,89 @@ const HotelsBL = {
 
 
         return [{"path": path.reverse(), "startDate": startDate, "endDate": endDate, "totalPrice": totalPrice}];
-    }
+    },
+
+    /**
+     * the function runs on all of the graph and insert the pathes to priority queue
+     * @param {*} graph - a weighted directed graph that we want to run distance vector algorithem on.
+     * @param {*} locationsRequest - an object with the location id and how many days we want to be there
+     */
+     calculateAllPathes(graph, locationsRequest) {
+         var pq = new dataStruct.priorityQueue();
+         var allValidPathes = [];
+         var currNode = "startNode";
+
+         HotelsBL.calculatePathesRecursive(currNode, null, null, {path:[], totalPrice: 0, totalScore: 0}, [], {}, allValidPathes, pq, graph, locationsRequest);
+         var pathes = [];
+         var pathesToReturn = 5
+
+         for(let i = 0; i < pathesToReturn; i++) {
+             pathes.push(allValidPathes[pq.removeMin()]);
+         }
+
+         return pathes;
+     },
+
+     calculatePathesRecursive(currNode, prevNode, edgeWeight, path, locations, daysInLocations, allValidPathes, pq, graph, locationsRequest) {
+        let flag = true;
+        
+        if (currNode == "endNode") {
+            path.totalScore += parseInt(edgeWeight);
+            allValidPathes.push(path);
+            pq.add(allValidPathes.length - 1, path.totalScore);
+         } else {
+            if (prevNode == "startNode") {
+                path.startDate = graph.node(currNode).checkIn;
+            }
+
+            if (currNode == "startNode") {
+                let edges = graph.outEdges(currNode)
+                for (let ed of edges) {
+                    this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), Object.assign({}, path),
+                        Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, graph, locationsRequest);
+                }
+            } else {
+                var node =  graph.node(currNode);
+                var index = locations.indexOf(node.location);
+                if (index != -1 && index != locations.length - 1) {
+                    flag = false;
+                } else {
+                    var nigthsInNode = Math.ceil((Math.abs((new Date(node.checkIn)).getTime() - (new Date(node.checkOut)).getTime())) / (1000 * 3600 * 24));
+
+                    if ((daysInLocations[node.location] != null?daysInLocations[node.location]:0) 
+                            + nigthsInNode > locationsRequest[node.location]) {
+                            flag = false;
+                    }
+                }
+
+                if (flag) {
+                    if (locations.indexOf(node.location) == -1) {
+                        locations.push(node.location);
+                    }
+
+                    var nigthsInNode = Math.ceil((Math.abs((new Date(node.checkIn)).getTime() - (new Date(node.checkOut)).getTime())) / (1000 * 3600 * 24));
+                    if (daysInLocations[node.location] == null ) {
+                        daysInLocations[node.location] = nigthsInNode;
+                    } else {
+                        daysInLocations[node.location] += nigthsInNode;
+                    }
+
+                    path.path.push(node);
+                    path.endDate = node.checkOut;
+                    path.totalPrice += parseInt(node.price);
+                    path.totalScore += parseInt(edgeWeight);
+
+                    let edges = graph.outEdges(currNode)
+                    for (let ed of edges) {
+                        var nextPath = Object.assign({}, path);
+                        nextPath.path = Object.assign([], nextPath.path);
+                        this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), nextPath,
+                            Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, graph, locationsRequest);
+                    }
+                }
+            }
+        }
+     }
 }
 
 module.exports = HotelsBL;
