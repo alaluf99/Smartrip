@@ -38,30 +38,11 @@ export default function PlanDetails(props) {
     const plans = state;
 
     const [plan, setPlan] = useState(plans[0]);
-    const [planIndex, setPlanIndex] = useState(0);
-    
-    const updatePlan = (i) => {
-        setPlan(plans[i])
-        setPlanIndex(i)
-    }
 
     return (
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
-            <Grid component="main" className={classes.menu} item xs={1}>
-                {
-                    plans.size > 1 ?
-                    plans.map((p, i) =>
-                        <div>
-                            <Grid >
-                                <Button onClick={()=>updatePlan(i)} variant="contained" color="secondary">Plan {i + 1}#</Button>
-                            </Grid>
-                            <br></br>
-                        </div>
-                    )
-                : null}
-            </Grid>
-            <Grid item xs={5} className={classes.paper} square>
+            <Grid item xs={6} className={classes.paper} square>
                 <div component="main" maxWidth="xs">
                     <div className={classes.root}>
                         <div>
@@ -70,16 +51,12 @@ export default function PlanDetails(props) {
                                     {plan.startDate} - {plan.endDate}
                                 </Typography>
                                 <Typography gutterBottom variant="h5" component="h2">
-                                    Plan suggestion {planIndex + 1}#
+                                    Plan suggestion
                     </Typography>
                             </div>
                             <Typography variant="h6">General info</Typography>
 
                             <Typography variant="subtitle1">
-                                number of adults: {plan.adultsNumber}
-                                <br />
-                    number of children: {plan.childrenNumber}
-                                <br />
         tota price: {plan.totalPrice}$
                             </Typography>
                             <br></br>
@@ -88,19 +65,19 @@ export default function PlanDetails(props) {
                                 justify="space-between"
                                 spacing={3}
                             >
-                                {plan.sections ? plan.sections.map(section =>
+                                {plan.path ? plan.path.map(section =>
                                     <Grid item
                                         container
                                         direction="row"
                                         justify="space-between"
                                         alignItems="stretch"
                                     >
-                                        <Rating name="read-only" value={section.accommodation.rating} readOnly />
-                                        <img src={hotelIcon} className={classes.hotelIcon}></img>
-                                        <Typography>{section.accommodation.accommodationName}</Typography>
-                                        <Typography>{section.accommodation.city}</Typography>
-                                        <Typography>{section.fromDate} - {section.toDate}</Typography>
-                                        <Typography>{section.price}$</Typography>
+                                        <Grid item xs={2}><Rating name="read-only" value={section.star} readOnly /></Grid>
+                                        <Grid item xs={1}><img src={hotelIcon} className={classes.hotelIcon}></img></Grid>
+                                        <Grid item xs={2}><Typography>{section.name}</Typography></Grid>
+                                        <Grid item xs={2}><Typography>{section.locationName}</Typography></Grid>
+                                        <Grid item xs={4    }><Typography>{section.checkIn} - {section.checkOut}</Typography></Grid>
+                                        <Grid item xs={1}><Typography>{section.price}$</Typography></Grid>
                                     </Grid>
                                 ) : null}
                             </Grid>
@@ -110,8 +87,8 @@ export default function PlanDetails(props) {
 
             </Grid>
             <Grid item xs={5} elevation={6} square>
-            { plan.sections ?
-                <Map locations={plan.sections.map(l => { return { "location": l.accommodation.location, "name": l.accommodation.accommodationName } })} />
+            { plan.path ?
+                <Map locations={plan.path.map(l => { return { "location": {long: l.long, lang:l.lang}, "name": l.name, "city": l.locationName } })} />
                 : null }
             </Grid>
         </Grid>

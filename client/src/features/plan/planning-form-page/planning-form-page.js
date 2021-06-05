@@ -30,9 +30,21 @@ export default function PlanningFormPage() {
 
   const history = useHistory();
   
-  const getDateFormat = (date) => {
+  const getDisplayDateFormat = (date) => {
     if (date) {
       return date.toLocaleString().split(',')[0]
+    }
+    return ""
+  }
+
+  const getRequestDateFormat = (date) => {
+    if (date) {
+      var date1= new Date(date)
+      var day = date1.getDay();
+      var month = date1.getMonth();
+      var fullDay = day > 9 ? day : "0" + day.toString()
+      var fullMonth = month > 9 ? month : "0" + month.toString()
+      return date1.getFullYear() + "-" + fullDay + "-" + fullMonth
     }
     return ""
   }
@@ -46,8 +58,8 @@ export default function PlanningFormPage() {
 
   const onSubmit = async (values) => {
     const planData = {
-      startDate: getDateFormat(startDate),
-      endDate: getDateFormat(endDate),
+      startDate: getRequestDateFormat(startDate),
+      endDate: getRequestDateFormat(endDate),
       people: numberOfTravelers,
       locations
     }
@@ -126,9 +138,9 @@ export default function PlanningFormPage() {
             <TableRow>
               <TableCell align="right">{loc.location}</TableCell>
               <TableCell align="right">{loc.isFlexible ? <DoneIcon></DoneIcon> : <CloseIcon></CloseIcon>}</TableCell>
-              <TableCell align="right">{loc.isFlexible ? loc.numerOfDays : '-'}</TableCell>
-              <TableCell align="right">{!loc.isFlexible ? getDateFormat(loc.startDate) : '-'}</TableCell>
-              <TableCell align="right">{!loc.isFlexible ? getDateFormat(loc.endDate) : '-'}</TableCell>
+              <TableCell align="right">{loc.isFlexible ? loc.numberOfDays : '-'}</TableCell>
+              <TableCell align="right">{!loc.isFlexible ? getDisplayDateFormat(loc.startDate) : '-'}</TableCell>
+              <TableCell align="right">{!loc.isFlexible ? getDisplayDateFormat(loc.endDate) : '-'}</TableCell>
             </TableRow>
           ))}
         </TableBody>
