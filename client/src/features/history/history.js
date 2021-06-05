@@ -38,7 +38,7 @@ export default function History() {
     toReturn = (
       <div>
         <Container>
-          <h1>My History</h1>
+          <h1>My Search History</h1>
           {
             plansHistory.map((plan) => { return <PlanSummery plan={plan} /> })
           }

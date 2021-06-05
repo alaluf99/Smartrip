@@ -62,7 +62,7 @@ export default function Suggestions() {
                     <Grid container justify="center" spacing={3}>
                         {suggestions.map((s) => (
                             <Grid key={s} item>
-                                { <Suggestion plan={s}></Suggestion>}
+                                { <Suggestion plan={s[0]}></Suggestion>}
                             </Grid>
                         ))}
                     </Grid>
