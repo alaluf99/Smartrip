@@ -2,6 +2,10 @@ const { planTrip } = require("../controllers/tripsController");
 const { firebase, db } = require("../utils/admin");
 const suggestionsOptions = require("../models/suggestionsOptions.json");
 const hotelsBL = require("../bl/HotelsBL");
+const serverConfig = require("../utils/config");
+
+const NodeCache = require("node-cache");
+const suggestionsCache = new NodeCache();
 
 const tripsService = {
   async getTrips(email) {
@@ -28,15 +32,18 @@ const tripsService = {
   },
   async getTripsByUserId(userId) {
     let trips = [];
-    const snapshot = await db.collection("trips").where("userId", "==", userId).get();
-    snapshot.forEach(doc => {
+    const snapshot = await db
+      .collection("trips")
+      .where("userId", "==", userId)
+      .get();
+    snapshot.forEach((doc) => {
       trips.push(doc.data());
     });
     return trips;
   },
   async planTrip(planReq, userId) {
     planReq.userId = userId;
-    await db.collection('trips').add(planReq);
+    await db.collection("trips").add(planReq);
     let plan = await hotelsBL.calculateTrip(planReq);
     return plan;
   },
@@ -44,7 +51,7 @@ const tripsService = {
     if (!numberOfSuggestions) {
       numberOfSuggestions = 2;
     }
-    let plans;
+    let plans = [];
     let promises = [];
     randomSuggestionsOptions = getRandom(
       suggestionsOptions,
@@ -52,10 +59,23 @@ const tripsService = {
     );
 
     randomSuggestionsOptions.forEach((tripOptions) => {
-      promises.push(hotelsBL.calculateTrip(tripOptions));
+      let suggestionsTTLInSeconds = serverConfig.suggestionsTTLInSeconds;
+      let currentCacheTry = suggestionsCache.get(tripOptions.requestId);
+
+      if (currentCacheTry) {
+        console.log("TAKEN FROM CACHE!!! ID IS --- " + tripOptions.requestId);
+        plans.push(currentCacheTry);
+      } else {
+        promises.push(getSuggestionWithId(tripOptions, tripOptions.requestId));
+      }
     });
 
-    plans = await Promise.all(promises);
+    nonCachePlans = await Promise.all(promises);
+
+    nonCachePlans.forEach((plan) => {
+      suggestionsCache.set(plan.requestId, plan, suggestionsTTLInSeconds);
+      plans.push(plan);
+    });
 
     return plans;
   },
@@ -106,6 +126,12 @@ getRandom = (arr, n) => {
     taken[x] = --len in taken ? taken[len] : len;
   }
   return result;
+};
+
+getSuggestionWithId = async (suggestionsOption, requestId) => {
+  let plan = await hotelsBL.calculateTrip(suggestionsOption);
+  plan.requestId = requestId;
+  return plan;
 };
 
 module.exports = tripsService;
