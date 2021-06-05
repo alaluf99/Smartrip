@@ -24,7 +24,7 @@ export default function HomeSuggestions() {
 
     useEffect(() => {
         axios
-          .get(serverUrls.suggestions)
+          .get(serverUrls.suggestions, {headers: {"numberOfSuggestions": 2}})
           .then((response) => {
             console.log(response.data.data);
             setSuggestions(response.data.data);
@@ -37,7 +37,6 @@ export default function HomeSuggestions() {
       }, []);
 
   var error = errorLoading ? <Error /> : <LoadingPage />;
-
 
     return (
         <div className={classes.root}>

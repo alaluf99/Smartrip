@@ -33,7 +33,7 @@ export default function Suggestions() {
 
     useEffect(() => {
         axios
-          .get(serverUrls.suggestions)
+          .get(serverUrls.suggestions, {headers: {"numberOfSuggestions": 2}})
           .then((response) => {
             console.log(response.data.data);
             setSuggestions(response.data.data);

@@ -39,9 +39,6 @@ export default function Suggestion(props) {
         const endDate = new Date(end);
         const diffTime = Math.abs(endDate - startDate);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        console.log(startDate)
-        console.log(endDate)
-        console.log(diffDays)
         return diffDays
     }
     return (<Card className={classes.card} item xs={12} md={6} lg={4}>

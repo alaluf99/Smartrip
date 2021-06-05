@@ -19,17 +19,14 @@ const useStyles = makeStyles({
 export default function PlanningFormPage() {
   const classes = useStyles();
 
-  const [isAddLocationOpen, setIsAddLocationOpen] = useState(false);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [locations, setLocations] = useState([]);
   const [numberOfTravelers, setNumberOfTravelers] = useState(1);
-  const [numberOfRooms, setNumberOfRooms] = useState(1);
   const [error, setError] = useState(null);
-  const [priceRangeValue, setPriceRangeValue] = useState([500, 6000]);
 
   const history = useHistory();
-  
+
   const getDisplayDateFormat = (date) => {
     if (date) {
       return date.toLocaleString().split(',')[0]
@@ -39,21 +36,17 @@ export default function PlanningFormPage() {
 
   const getRequestDateFormat = (date) => {
     if (date) {
-      var date1= new Date(date)
-      var day = date1.getDay();
-      var month = date1.getMonth();
-      var fullDay = day > 9 ? day : "0" + day.toString()
-      var fullMonth = month > 9 ? month : "0" + month.toString()
-      return date1.getFullYear() + "-" + fullDay + "-" + fullMonth
+      var date1 = new Date(date)
+      var day = ("0" + date1.getDate()).slice(-2)
+      var month = ("0" + (date1.getMonth() + 1)).slice(-2)
+      return date1.getFullYear() + "-" + month + "-" + day
     }
     return ""
   }
 
   const addLocation = (newLocation) => {
-    const updatedLocations = locations;
-    updatedLocations.push(newLocation);
-    setLocations(updatedLocations);
-    setIsAddLocationOpen(false);
+    console.log(newLocation)
+    setLocations([...locations, newLocation]);
   }
 
   const onSubmit = async (values) => {
@@ -64,12 +57,9 @@ export default function PlanningFormPage() {
       locations
     }
 
-    console.log(planData);
-
     axios
       .post(serverUrls.plan, planData)
       .then((response) => {
-        console.log(response.data.data);
         const plans = response.data.data;
 
         history.push({
@@ -84,41 +74,7 @@ export default function PlanningFormPage() {
       });
   };
 
-  const marks = [
-    {
-      value: 500,
-      label: "500$",
-    },
-    {
-      value: 3000,
-      label: "3000$",
-    },
-    {
-      value: 6000,
-      label: "6000$",
-    },
-    {
-      value: 10000,
-      label: "10000$",
-    },
-  ];
-
-  const validate = (values) => {
-    const errors = {};
-    if (!values.firstName) {
-      errors.firstName = "Required";
-    }
-    if (!values.lastName) {
-      errors.lastName = "Required";
-    }
-    if (!values.email) {
-      errors.email = "Required";
-    }
-    return errors;
-  };
-
   const displayTravelersCounter = numberOfTravelers > 0;
-  const displayRoomsCounter = numberOfRooms > 0;
 
   const locationsTable = (locations) =>
   (
@@ -149,13 +105,12 @@ export default function PlanningFormPage() {
   )
 
   return (
-    <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
+    <div style={{ padding: 16, margin: "auto", maxWidth: 800 }}>
       <CssBaseline />
       {error}
       <Form
         onSubmit={onSubmit}
         initialValues={{ employed: true, stooge: "larry" }}
-        validate={validate}
         render={({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit} noValidate>
             <Paper style={{ padding: 16 }}>
@@ -226,64 +181,19 @@ export default function PlanningFormPage() {
                     </ButtonGroup></Grid>
 
                   </Grid>
-                  <Grid container item xs={12}>
-                    <Grid item xs={4}>
-                      <h3>Number of rooms</h3>
-                    </Grid>
-                    <Grid item xs={8}>
-                      <ButtonGroup
-                        className="rooms"
-                        size="small"
-                        aria-label="small outlined button group"
-                      >
-                        {displayRoomsCounter && (
-                          <Button
-                            onClick={() => setNumberOfRooms(numberOfRooms - 1)}
-                          >
-                            -
-                          </Button>
-                        )}
-
-                        {displayRoomsCounter && (
-                          <Button disabled>{numberOfRooms}</Button>
-                        )}
-                        <Button onClick={() => setNumberOfRooms(numberOfRooms + 1)}>
-                          +
-                    </Button>
-                      </ButtonGroup>
-                    </Grid>
-                  </Grid>
-                  <Grid container item xs={12}>
-                    <Grid item xs={4}>
-                      <h3>Price range</h3>
-                    </Grid>
-                    <Grid item xs={7}>
-                      <Slider
-                        value={priceRangeValue}
-                        onChange={(event, newValue) => {
-                          setPriceRangeValue(newValue);
-                        }}
-                        valueLabelDisplay="auto"
-                        aria-labelledby="range-slider"
-                        getAriaValueText={(value) => `${value}°C`}
-                        min={500}
-                        max={10000}
-                        marks={marks}
-                        className="price-range"
-                      />
-                    </Grid>
-                  </Grid>
                   <Grid container>
                     <Grid container>
                       <h3>Locations</h3>
-                      <Button size="small" variant="contained" onClick={() => setIsAddLocationOpen(true)} className={{margin: 100}}>Add</Button>
                     </Grid>
                     <Grid container>
                       {
                         locations.length > 0 ?
                           locationsTable(locations) : ''}
                     </Grid>
-                    <AddLocationModal close={() => setIsAddLocationOpen(false)} isOpen={isAddLocationOpen} onAddLocation={addLocation}></AddLocationModal>
+                    <Grid container>
+                      <br></br>
+                      <AddLocationModal onAddLocation={addLocation}></AddLocationModal>
+                    </Grid>
                   </Grid>
                   <br></br>
                   <Grid>
