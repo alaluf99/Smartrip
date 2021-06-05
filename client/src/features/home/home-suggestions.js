@@ -43,7 +43,7 @@ export default function HomeSuggestions() {
             <h1>Suggestions for you...</h1>
             {
                 suggestions ? <Grid container>
-                    {suggestions.map(sug => <Suggestion plan={sug}></Suggestion>)}
+                    {suggestions.map(sug => <Suggestion plan={sug[0]}></Suggestion>)}
                 </Grid> : error}
         </div>
     );
