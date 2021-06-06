@@ -11,6 +11,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import DoneIcon from '@material-ui/icons/Done';
 
 const useStyles = makeStyles({
+  table: {
+    marginBottom: 50
+  },
   root: {
     maxWidth: 345,
   },
@@ -78,25 +81,25 @@ export default function PlanningFormPage() {
 
   const locationsTable = (locations) =>
   (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
+    <TableContainer component={Paper} className={classes.table}>
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="right">city</TableCell>
-            <TableCell align="right">is flexible</TableCell>
-            <TableCell align="right">number of days</TableCell>
-            <TableCell align="right">start date</TableCell>
-            <TableCell align="right">end date</TableCell>
+            <TableCell align="center">city</TableCell>
+            <TableCell align="center">is flexible</TableCell>
+            <TableCell align="center">number of days</TableCell>
+            <TableCell align="center">start date</TableCell>
+            <TableCell align="center">end date</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {locations.map((loc) => (
             <TableRow>
-              <TableCell align="right">{loc.location}</TableCell>
-              <TableCell align="right">{loc.isFlexible ? <DoneIcon></DoneIcon> : <CloseIcon></CloseIcon>}</TableCell>
-              <TableCell align="right">{loc.isFlexible ? loc.numberOfDays : '-'}</TableCell>
-              <TableCell align="right">{!loc.isFlexible ? getDisplayDateFormat(loc.startDate) : '-'}</TableCell>
-              <TableCell align="right">{!loc.isFlexible ? getDisplayDateFormat(loc.endDate) : '-'}</TableCell>
+              <TableCell align="center">{loc.location}</TableCell>
+              <TableCell align="center">{loc.isFlexible ? <DoneIcon></DoneIcon> : <CloseIcon></CloseIcon>}</TableCell>
+              <TableCell align="center">{loc.isFlexible ? loc.numberOfDays : '-'}</TableCell>
+              <TableCell align="center">{!loc.isFlexible ? getDisplayDateFormat(loc.startDate) : '-'}</TableCell>
+              <TableCell align="center">{!loc.isFlexible ? getDisplayDateFormat(loc.endDate) : '-'}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -117,72 +120,79 @@ export default function PlanningFormPage() {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid alignItems="flex-start" direction="column">
                   <Grid container item xs={12}>
-                    <Grid item xs={4}><h3>Trip dates</h3></Grid>
-                    <Grid item xs={4}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        name="datee"
-                        variant="inline"
-                        format="MM/dd/yyyy"
-                        margin="normal"
-                        id="travel start date"
-                        label="travel start date"
-                        value={startDate}
-                        onChange={(date) => {
-                          setStartDate(date);
-                          console.log("blaaaaa");
-                        }}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                        className="date-picker"
-                      /></Grid>
-                    <Grid item xs={4}> <KeyboardDatePicker
-                      disableToolbar
-                      name="datee"
-                      variant="inline"
-                      format="MM/dd/yyyy"
-                      margin="normal"
-                      id="travel end date"
-                      label="travel end date"
-                      value={endDate}
-                      onChange={(date) => {
-                        setEndDate(date);
-                      }}
-                      KeyboardButtonProps={{
-                        "aria-label": "change date",
-                      }}
-                      className="date-picker"
-                    />
+                    <Grid item xs={6}>
+                      <Grid item xs={12}>
+                        <h3>Trip dates</h3></Grid>
+                      <Grid container item xs={12}>
+                        <Grid item xs={5}>
+                          <KeyboardDatePicker
+                            disableToolbar
+                            name="datee"
+                            variant="inline"
+                            format="MM/dd/yyyy"
+                            id="travel start date"
+                            label="travel start date"
+                            value={startDate}
+                            onChange={(date) => {
+                              setStartDate(date);
+                              console.log("blaaaaa");
+                            }}
+                            KeyboardButtonProps={{
+                              "aria-label": "change date",
+                            }}
+                            className="date-picker"
+                          /></Grid>
+                        <Grid item xs={2}></Grid>
+                        <Grid item xs={5}>
+                          <KeyboardDatePicker
+                            disableToolbar
+                            name="datee"
+                            variant="inline"
+                            format="MM/dd/yyyy"
+                            id="travel end date"
+                            label="travel end date"
+                            value={endDate}
+                            onChange={(date) => {
+                              setEndDate(date);
+                            }}
+                            KeyboardButtonProps={{
+                              "aria-label": "change date",
+                            }}
+                            className="date-picker"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid container item xs={6}>
+                      <Grid item xs={12}><h3>Number of travellers</h3></Grid>
+                      <Grid item xs={12}>
+                        <ButtonGroup
+                          size="small"
+                          className="travelers"
+                          aria-label="small outlined button group"
+                        >
+                          {displayTravelersCounter && (
+                            <Button
+                              onClick={() =>
+                                setNumberOfTravelers(numberOfTravelers - 1)
+                              }
+                            >
+                              -
+                            </Button>
+                          )}
+                          {displayTravelersCounter && (
+                            <Button style={{ backgroundColor: 'transparent' }}>{numberOfTravelers}</Button>
+                          )}
+                          <Button onClick={() => setNumberOfTravelers(numberOfTravelers + 1)}>
+                            +
+                    </Button>
+                        </ButtonGroup></Grid>
+
                     </Grid>
                   </Grid>
-                  <Grid container item xs={12}>
-                    <Grid item xs={4}><h3>Number of travellers</h3></Grid>
-                    <Grid item xs={8}>          <ButtonGroup
-                      size="small"
-                      className="travelers"
-                      aria-label="small outlined button group"
-                    >
-                      {displayTravelersCounter && (
-                        <Button
-                          onClick={() =>
-                            setNumberOfTravelers(numberOfTravelers - 1)
-                          }
-                        >
-                          -
-                        </Button>
-                      )}
-                      {displayTravelersCounter && (
-                        <Button disabled>{numberOfTravelers}</Button>
-                      )}
-                      <Button onClick={() => setNumberOfTravelers(numberOfTravelers + 1)}>
-                        +
-                    </Button>
-                    </ButtonGroup></Grid>
-
-                  </Grid>
+                  <br></br>
                   <Grid container>
-                    <Grid container>
+                    <Grid item xs={12}>
                       <h3>Locations</h3>
                     </Grid>
                     <Grid container>
@@ -191,18 +201,17 @@ export default function PlanningFormPage() {
                           locationsTable(locations) : ''}
                     </Grid>
                     <Grid container>
-                      <br></br>
                       <AddLocationModal onAddLocation={addLocation}></AddLocationModal>
                     </Grid>
                   </Grid>
                   <br></br>
                   <Grid>
                     <Grid container>
-                      <Grid className="submit">
+                      <Grid className="submit" item xs={12}>
                         <Button
                           onClick={onSubmit}
                           variant="contained"
-                          color="primary"
+                          color="secondary"
                           type="submit"
                           disabled={submitting}
                         >

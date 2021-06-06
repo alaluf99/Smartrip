@@ -66,6 +66,7 @@ export default function AddLocationModal({ onAddLocation }) {
         </Grid>
         <Grid item xs={3}>
           <Checkbox
+          color={"primary"}
             checked={isFlexible}
             onChange={e => setIsFlexible(e.target.checked)}
             inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -76,7 +77,6 @@ export default function AddLocationModal({ onAddLocation }) {
             <TextField
               type="number"
               variant="outlined"
-              margin="normal"
               label="days number"
               name="numberOfDays"
               value={numberOfDays}
@@ -86,7 +86,6 @@ export default function AddLocationModal({ onAddLocation }) {
                 name="datee"
                 variant="inline"
                 format="MM/dd/yyyy"
-                margin="normal"
                 id="travel start date"
                 label="travel start date"
                 value={startDate}
