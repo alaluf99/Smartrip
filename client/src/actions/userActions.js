@@ -1,9 +1,10 @@
-import { SET_USER, 
-    SET_UNAUTHENTICATED, 
+import {
+    SET_USER,
+    SET_UNAUTHENTICATED,
     LOADING_USER,
     LOADING_UI,
     SET_ERRORS,
-    CLEAR_ERRORS
+    CLEAR_ERRORS, WRONG_PASSWORD_OR_EMAIL
 } from '../redux/types';
 import axios from 'axios';
 import { serverUrls } from '../config/config';
@@ -18,6 +19,11 @@ export const loginUser = (userData, history) => (dispatch) => {
             history.push('/');
         })
         .catch((err) => {
+            if (err.toString() === 'Error: Request failed with status code 400') {
+                dispatch({
+                    type: WRONG_PASSWORD_OR_EMAIL
+                })
+            }
           dispatch({
             type: SET_ERRORS,
             payload: err.response.data

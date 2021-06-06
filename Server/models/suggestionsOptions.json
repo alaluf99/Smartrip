@@ -50,12 +50,11 @@
   {
     "requestId": 4,
     "startDate": "2021-07-10",
-    "endDate": "2021-07-22",
+    "endDate": "2021-07-18",
     "people": 2,
     "locations": [
       { "location": "Barcelona", "isFlexible": true, "numberOfDays": 4 },
-      { "location": "Budapest", "isFlexible": true, "numberOfDays": 4 },
-      { "location": "Milan", "isFlexible": true, "numberOfDays": 4 }
+      { "location": "Budapest", "isFlexible": true, "numberOfDays": 4 }
     ]
   },
   {
@@ -121,10 +120,10 @@
   {
     "requestId": 9,
     "startDate": "2021-06-20",
-    "endDate": "2021-06-25",
+    "endDate": "2021-06-24",
     "people": 2,
     "locations": [
-      { "location": "Budapest", "isFlexible": true, "numberOfDays": 3 },
+      { "location": "Budapest", "isFlexible": true, "numberOfDays": 2 },
       {
         "location": "Bucharest",
         "isFlexible": true,
@@ -135,10 +134,10 @@
   {
     "requestId": 10,
     "startDate": "2021-07-18",
-    "endDate": "2021-07-24",
+    "endDate": "2021-07-21",
     "people": 2,
     "locations": [
-      { "location": "Budapest", "isFlexible": true, "numberOfDays": 3 },
+      { "location": "Budapest", "isFlexible": true, "numberOfDays": 1 },
       {
         "location": "Moscow",
         "isFlexible": true,
@@ -149,10 +148,10 @@
   {
     "requestId": 11,
     "startDate": "2021-07-18",
-    "endDate": "2021-07-24",
+    "endDate": "2021-07-22",
     "people": 2,
     "locations": [
-      { "location": "Rome", "isFlexible": true, "numberOfDays": 3 },
+      { "location": "Rome", "isFlexible": true, "numberOfDays": 2 },
       {
         "location": "Moscow",
         "isFlexible": true,
@@ -163,12 +162,12 @@
   {
     "requestId": 12,
     "startDate": "2021-07-10",
-    "endDate": "2021-07-19",
+    "endDate": "2021-07-15",
     "people": 2,
     "locations": [
-      { "location": "Rome", "isFlexible": true, "numberOfDays": 3 },
-      { "location": "Budapest", "isFlexible": true, "numberOfDays": 3 },
-      { "location": "Kaunas", "isFlexible": true, "numberOfDays": 3 }
+      { "location": "Rome", "isFlexible": true, "numberOfDays": 2 },
+      { "location": "Budapest", "isFlexible": true, "numberOfDays": 2 },
+      { "location": "Kaunas", "isFlexible": true, "numberOfDays": 1 }
     ]
   }
 ]
