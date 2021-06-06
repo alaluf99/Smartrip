@@ -45,7 +45,10 @@ export default function PlanDetails(props) {
     }
 
     const [plan, setPlan] = useState(plans[0]);
-    console.log(plan)
+    
+    const getIndex = () => {
+        return plans.length > 1 ? planIndex + 1 + "#" : ""
+    }
 
     return (
         <Grid container component="main" className={classes.root}>
@@ -70,7 +73,7 @@ export default function PlanDetails(props) {
                                     {plan.startDate} - {plan.endDate}
                                 </Typography>
                                 <Typography gutterBottom variant="h5" component="h2">
-                                    Plan suggestion {planIndex + 1}#
+                                    Plan suggestion {getIndex()}
                     </Typography>
                             </div>
                             <Typography variant="h6">General info</Typography>
@@ -106,7 +109,7 @@ export default function PlanDetails(props) {
                                     >
                                         <Grid item xs={2}><Rating size="small" name="read-only" value={section.star} readOnly /></Grid>
                                         <Grid item xs={1}>
-                                            <Link href={"www.booking.com\\" + section.link} onClick={preventDefault}><img src={hotelIcon} className={classes.hotelIcon}></img></Link>
+                                            <a href={"www.booking.com\\" + section.link } target="_blank"><img src={hotelIcon} className={classes.hotelIcon}></img></a>
                                         </Grid>
                                         <Grid item xs={2}><Typography>{section.name}</Typography></Grid>
                                         <Grid item xs={2}><Typography>{section.locationName}</Typography></Grid>

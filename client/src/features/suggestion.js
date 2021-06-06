@@ -50,7 +50,7 @@ export default function Suggestion(props) {
                 {plan.path.map(place => <Typography variant="subtitle1" className={classes.content}>{place.locationName} {calcNumberOfDays(place.checkIn, place.checkOut)} days</Typography>)}
                 <br></br>
                 <Button variant="contained" color="default" onClick={handleMoreInfo}>
-                    Continue Searching
+                    More Info
 </Button>
             </CardContent>
         </CardActionArea>
