@@ -68,9 +68,9 @@ export function Home() {
                         </Grid>
                     </Grid>
                 </Paper>
-                <Grid container spacing={2} justify="center" className={{ width: '100%' }}>
+                {/* <Grid container spacing={2} justify="center" className={{ width: '100%' }}>
                     <HomeSuggestions />
-                </Grid>
+                </Grid> */}
             </Grid>
         </div>
     );
