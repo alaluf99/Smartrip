@@ -6,5 +6,5 @@ module.exports = {
   messagingSenderId: "86639257169",
   appId: "1:86639257169:web:33f67b5d77c418ee803a70",
   measurementId: "G-5PCRRJDDLR",
-  suggestionsTTLInSeconds: 1800,
+  suggestionsTTLInSeconds: 7200,
 };

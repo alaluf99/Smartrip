@@ -48,6 +48,7 @@ const tripsService = {
     return plan;
   },
   async getSuggestions(numberOfSuggestions) {
+    let suggestionsTTLInSeconds = serverConfig.suggestionsTTLInSeconds;
     if (!numberOfSuggestions) {
       numberOfSuggestions = 2;
     }
@@ -59,7 +60,6 @@ const tripsService = {
     );
 
     randomSuggestionsOptions.forEach((tripOptions) => {
-      let suggestionsTTLInSeconds = serverConfig.suggestionsTTLInSeconds;
       let currentCacheTry = suggestionsCache.get(tripOptions.requestId);
 
       if (currentCacheTry) {
@@ -73,8 +73,13 @@ const tripsService = {
     nonCachePlans = await Promise.all(promises);
 
     nonCachePlans.forEach((plan) => {
-      suggestionsCache.set(plan.requestId, plan, suggestionsTTLInSeconds);
-      plans.push(plan);
+      let cheapestPlan = plan[0];
+      suggestionsCache.set(
+        plan.requestId,
+        cheapestPlan,
+        suggestionsTTLInSeconds
+      );
+      plans.push(cheapestPlan);
     });
 
     return plans;
