@@ -3,9 +3,8 @@ import { KeyboardDatePicker } from "@material-ui/pickers";
 import React, { useState } from "react";
 import Select from 'react-select';
 
-const cities = [{ value: "Tel Aviv", label: "Tel Aviv" },
-{ value: "Haifa", label: "Haifa" },
-{ value: "Kiryat Ono", label: "Kiryat Ono" }];
+const citiesList = ["Dubai", "London", "Amsterdam", "Sydney", "Dublin", "Singapore", "Milan", "Rotterdam", "Las Vegas", "Miami", "Quebec City", "Geneva", "Prague", "Nice", "Nairobi", "Tel Aviv", "Hamburg", "Venice", "Paphos City", "Cairo", "Athens", "Jaipur", "Munich", "Manchester", "Liverpool", "Toronto", "Vancouver", "Tokyo", "Seoul", "Rome"]
+const cities = citiesList.map(c => {return {value: c, label: c} })
 
 export default function AddLocationModal({ onAddLocation }) {
   const [location, setLocation] = useState();
