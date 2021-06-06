@@ -7,6 +7,7 @@ import { serverUrls } from "../../config/config";
 import Error from "../../pages/errorPage/ErrorPage";
 import LoadingPage from "../../pages/loadingPage/LoadingPage";
 import PlanSummery from "../plan/plan-summery";
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -37,12 +38,13 @@ export default function History() {
   if (plansHistory) {
     toReturn = (
       <div>
-        <Container>
-          <h1>My Search History</h1>
+        <h1>My Search History</h1>
+        <br/>
+        <Grid container spacing={3} direction="row" justify="center" alignItems="center">
           {
             plansHistory.map((plan) => { return <PlanSummery plan={plan} /> })
           }
-        </Container>
+        </Grid>
       </div>
     );
   }

@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { React } from "react";
 import { useHistory } from "react-router";
 import newYorkImage from "./../../images/newYork.jpg";
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
   root: {
@@ -58,46 +59,46 @@ export default function PlanSummery(props) {
   }
 
   return (
-    <div className={classes.root}>
-      <Card key={plan.planId} className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image={newYorkImage}
-            title="Contemplative Reptile"
-          />
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              {plan.startDate} - {plan.endDate}
-            </Typography>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className={classes.title}
-            >
-              My trip
+    <Grid item xs={4}>
+        <Card key={plan.planId} className={classes.card}>
+          <CardActionArea>
+            <CardMedia
+              className={classes.media}
+              image={newYorkImage}
+              title="Contemplative Reptile"
+            />
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                {plan.startDate} - {plan.endDate}
               </Typography>
-            <Typography
-              variant="body2"
-              component="p"
-              className={classes.content}
-            >
-              number of adults: {plan.adultsNumber}
-              <br />
-                number of children: {plan.childrenNumber}
-              <br />
-                total price: {plan.totaPrice}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <Divider className={classes.divider} light />
-        <CardActions>
-          <Button size="small" color="primary" onClick={handleMoreInfo}>
-            More info
-            </Button>
-        </CardActions>
-      </Card>
-    </div>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="h2"
+                className={classes.title}
+              >
+                My trip
+                </Typography>
+              <Typography
+                variant="body2"
+                component="p"
+                className={classes.content}
+              >
+                number of adults: {plan.adultsNumber}
+                <br />
+                  number of children: {plan.childrenNumber}
+                <br />
+                  total price: {plan.totaPrice}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+          <Divider className={classes.divider} light />
+          <CardActions>
+            <Button size="small" color="primary" onClick={handleMoreInfo}>
+              More info
+              </Button>
+          </CardActions>
+        </Card>
+    </Grid>
   );
 }
