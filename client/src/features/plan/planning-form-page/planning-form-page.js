@@ -113,9 +113,8 @@ export default function PlanningFormPage() {
       {error}
       <Form
         onSubmit={onSubmit}
-        initialValues={{ employed: true, stooge: "larry" }}
-        render={({ handleSubmit, submitting }) => (
-          <form onSubmit={handleSubmit} noValidate>
+        render={({ submitting }) => (
+          <form noValidate>
             <Paper style={{ padding: 16 }}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid alignItems="flex-start" direction="column">
