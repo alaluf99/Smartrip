@@ -329,10 +329,11 @@ const HotelsBL = {
      */
      calculateAllPathes(graph, locationsRequest) {
          var pq = new dataStruct.priorityQueue();
+         var top5 = new dataStruct.priorityQueue();
          var allValidPathes = [];
          var currNode = "startNode";
 
-         HotelsBL.calculatePathesRecursive(currNode, null, null, {path:[], totalPrice: 0, totalScore: 0}, [], {}, allValidPathes, pq, graph, locationsRequest);
+         HotelsBL.calculatePathesRecursive(currNode, null, null, {path:[], totalPrice: 0, totalScore: 0}, [], {}, allValidPathes, pq, top5, graph, locationsRequest);
          var pathes = [];
          var pathesToReturn = 5
 
@@ -343,13 +344,18 @@ const HotelsBL = {
          return pathes;
      },
 
-     calculatePathesRecursive(currNode, prevNode, edgeWeight, path, locations, daysInLocations, allValidPathes, pq, graph, locationsRequest) {
+     calculatePathesRecursive(currNode, prevNode, edgeWeight, path, locations, daysInLocations, allValidPathes, pq, top5, graph, locationsRequest) {
         let flag = true;
         
         if (currNode == "endNode") {
             path.totalScore += parseInt(edgeWeight);
             allValidPathes.push(path);
             pq.add(allValidPathes.length - 1, path.totalScore);
+
+            top5.add(path.totalPrice, path.totalPrice * (-1));
+            if (top5.size() > 5)
+                top5.removeMin();
+
          } else {
             if (prevNode == "startNode") {
                 path.startDate = graph.node(currNode).checkIn;
@@ -359,7 +365,7 @@ const HotelsBL = {
                 let edges = graph.outEdges(currNode)
                 for (let ed of edges) {
                     this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), Object.assign({}, path),
-                        Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, graph, locationsRequest);
+                        Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, top5, graph, locationsRequest);
                 }
             } else {
                 var node =  graph.node(currNode);
@@ -392,12 +398,14 @@ const HotelsBL = {
                     path.totalPrice += parseInt(node.price);
                     path.totalScore += parseInt(edgeWeight);
 
-                    let edges = graph.outEdges(currNode)
-                    for (let ed of edges) {
-                        var nextPath = Object.assign({}, path);
-                        nextPath.path = Object.assign([], nextPath.path);
-                        this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), nextPath,
-                            Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, graph, locationsRequest);
+                    if ((top5.size() < 5) || (path.totalPrice <= top5.min() * (-1) && top5.size() == 5)) {
+                        let edges = graph.outEdges(currNode)
+                        for (let ed of edges) {
+                            var nextPath = Object.assign({}, path);
+                            nextPath.path = Object.assign([], nextPath.path);
+                            this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), nextPath,
+                                Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, top5, graph, locationsRequest);
+                        }
                     }
                 }
             }
