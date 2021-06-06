@@ -44,7 +44,7 @@ const tripsService = {
   async planTrip(planReq, userId) {
     planReq.userId = userId;
     await db.collection("trips").add(planReq);
-    let plan = await hotelsBL.calculateTrip(planReq);
+    let plan = await hotelsBL.calculateTrip(planReq, 1);
     return plan;
   },
   async getSuggestions(numberOfSuggestions) {
@@ -129,7 +129,7 @@ getRandom = (arr, n) => {
 };
 
 getSuggestionWithId = async (suggestionsOption, requestId) => {
-  let plan = await hotelsBL.calculateTrip(suggestionsOption);
+  let plan = await hotelsBL.calculateTrip(suggestionsOption, 1);
   plan.requestId = requestId;
   return plan;
 };
