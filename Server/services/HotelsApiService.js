@@ -107,6 +107,7 @@ const HotelsApiService = {
         await this.callPython(pythonUrl);
         
         var hotels = {hotels: JSON.parse(fs.readFileSync(fileName))};
+        hotels.hotels[0] = hotels.hotels[0].slice(0, 5);
         hotels.checkIn = requestData.checkIn;
         hotels.checkOut = requestData.checkOut;
         hotels.locationName = requestData.location

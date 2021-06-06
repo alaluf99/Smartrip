@@ -8,14 +8,14 @@ const graphOptions = {
 
 const HotelsBL = {
 
-    async calculateTrip(requestData) {
+    async calculateTrip(requestData, numOfResults) {
         var options = await HotelsBL.getHotelOptions(requestData);
 
         var graph = await HotelsBL.getHotelsGraph(options, requestData.startDate , requestData.endDate);
 
         //var path = await HotelsBL.getBestPathes(graph, HotelsBL.getLocationsDaysJSON(requestData.locations));
 
-        var path = await HotelsBL.calculateAllPathes(graph, HotelsBL.getLocationsDaysJSON(requestData.locations));
+        var path = await HotelsBL.calculateAllPathes(graph, HotelsBL.getLocationsDaysJSON(requestData.locations), numOfResults);
 
         return path;
     },
@@ -326,25 +326,25 @@ const HotelsBL = {
      * the function runs on all of the graph and insert the pathes to priority queue
      * @param {*} graph - a weighted directed graph that we want to run distance vector algorithem on.
      * @param {*} locationsRequest - an object with the location id and how many days we want to be there
+     * @param {int} numOfResults - how many path result we want
      */
-     calculateAllPathes(graph, locationsRequest) {
+     calculateAllPathes(graph, locationsRequest, numOfResults) {
          var pq = new dataStruct.priorityQueue();
          var top5 = new dataStruct.priorityQueue();
          var allValidPathes = [];
          var currNode = "startNode";
 
-         HotelsBL.calculatePathesRecursive(currNode, null, null, {path:[], totalPrice: 0, totalScore: 0}, [], {}, allValidPathes, pq, top5, graph, locationsRequest);
+         HotelsBL.calculatePathesRecursive(currNode, null, null, {path:[], totalPrice: 0, totalScore: 0}, [], {}, allValidPathes, pq, top5, graph, locationsRequest, numOfResults);
          var pathes = [];
-         var pathesToReturn = 5
 
-         for(let i = 0; i < pathesToReturn; i++) {
+         for(let i = 0; i < numOfResults; i++) {
              pathes.push(allValidPathes[pq.removeMin()]);
          }
 
          return pathes;
      },
 
-     calculatePathesRecursive(currNode, prevNode, edgeWeight, path, locations, daysInLocations, allValidPathes, pq, top5, graph, locationsRequest) {
+     calculatePathesRecursive(currNode, prevNode, edgeWeight, path, locations, daysInLocations, allValidPathes, pq, topResults, graph, locationsRequest, numOfResults) {
         let flag = true;
         
         if (currNode == "endNode") {
@@ -352,9 +352,9 @@ const HotelsBL = {
             allValidPathes.push(path);
             pq.add(allValidPathes.length - 1, path.totalScore);
 
-            top5.add(path.totalPrice, path.totalPrice * (-1));
-            if (top5.size() > 5)
-                top5.removeMin();
+            topResults.add(path.totalPrice, path.totalPrice * (-1));
+            if (topResults.size() > numOfResults)
+                topResults.removeMin();
 
          } else {
             if (prevNode == "startNode") {
@@ -365,7 +365,7 @@ const HotelsBL = {
                 let edges = graph.outEdges(currNode)
                 for (let ed of edges) {
                     this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), Object.assign({}, path),
-                        Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, top5, graph, locationsRequest);
+                        Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, topResults, graph, locationsRequest, numOfResults);
                 }
             } else {
                 var node =  graph.node(currNode);
@@ -398,13 +398,13 @@ const HotelsBL = {
                     path.totalPrice += parseInt(node.price);
                     path.totalScore += parseInt(edgeWeight);
 
-                    if ((top5.size() < 5) || (path.totalPrice <= top5.min() * (-1) && top5.size() == 5)) {
+                    if ((topResults.size() < numOfResults) || (path.totalPrice <= parseInt(topResults.min()) && topResults.size() == numOfResults)) {
                         let edges = graph.outEdges(currNode)
                         for (let ed of edges) {
                             var nextPath = Object.assign({}, path);
                             nextPath.path = Object.assign([], nextPath.path);
                             this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), nextPath,
-                                Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, top5, graph, locationsRequest);
+                                Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, topResults, graph, locationsRequest, numOfResults);
                         }
                     }
                 }
