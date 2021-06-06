@@ -7,6 +7,7 @@ export const LOADING_USER = 'LOADING_USER';
 export const LOADING_UI = 'LOADING_UI';
 export const LOADING_DATA = 'LOADING_DATA';
 export const STOP_LOADING_UI = 'STOP_LOADING_UI';
+export const WRONG_PASSWORD_OR_EMAIL = 'WRONG_PASSWORD_OR_EMAIL';
 // error
 export const SET_ERRORS = 'SET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
