@@ -337,7 +337,7 @@ const HotelsBL = {
          HotelsBL.calculatePathesRecursive(currNode, null, null, {path:[], totalPrice: 0, totalScore: 0}, [], {}, allValidPathes, pq, top5, graph, locationsRequest, numOfResults);
          var pathes = [];
 
-         for(let i = 0; i < numOfResults && pq.size > 0; i++) {
+         for(let i = 0; i < numOfResults && pq.size() > 0; i++) {
              pathes.push(allValidPathes[pq.removeMin()]);
          }
 
