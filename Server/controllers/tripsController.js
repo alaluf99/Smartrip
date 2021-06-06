@@ -14,7 +14,11 @@ const tripsController = {
   async addNewTrip(req, res) {},
   async planTrip(req, res) {
     try {
-      var plan = await tripsService.planTrip(req.body, req.user.user_id);
+      var plan = await tripsService.planTrip(
+        req.body,
+        req.user.user_id,
+        req.header("numOfResults")
+      );
       return res.status(200).json({ data: plan });
     } catch (e) {
       console.error(e);

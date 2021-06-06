@@ -22,8 +22,8 @@ const useStyles = makeStyles({
 export default function PlanningFormPage() {
   const classes = useStyles();
 
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [locations, setLocations] = useState([]);
   const [numberOfTravelers, setNumberOfTravelers] = useState(1);
   const [error, setError] = useState(null);
@@ -117,7 +117,7 @@ export default function PlanningFormPage() {
           <form noValidate>
             <Paper style={{ padding: 16 }}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid alignItems="flex-start" direction="column">
+                <Grid container alignItems="flex-start" direction="column">
                   <Grid container item xs={12}>
                     <Grid item xs={6}>
                       <Grid item xs={12}>

@@ -41,10 +41,13 @@ const tripsService = {
     });
     return trips;
   },
-  async planTrip(planReq, userId) {
+  async planTrip(planReq, userId, numOfResults) {
+    if (!numOfResults) {
+      numOfResults = 1;
+    }
     planReq.userId = userId;
     await db.collection("trips").add(planReq);
-    let plan = await hotelsBL.calculateTrip(planReq, 1);
+    let plan = await hotelsBL.calculateTrip(planReq, numOfResults);
     return plan;
   },
   async getSuggestions(numberOfSuggestions) {

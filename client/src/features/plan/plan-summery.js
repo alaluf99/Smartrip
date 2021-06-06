@@ -72,23 +72,19 @@ export default function PlanSummery(props) {
                 {plan.startDate} - {plan.endDate}
               </Typography>
               <Typography
-                gutterBottom
-                variant="h5"
-                component="h2"
-                className={classes.title}
-              >
-                My trip
-                </Typography>
-              <Typography
                 variant="body2"
                 component="p"
                 className={classes.content}
               >
-                number of adults: {plan.adultsNumber}
+                number of poeple: {plan.people}
                 <br />
-                  number of children: {plan.childrenNumber}
-                <br />
-                  total price: {plan.totaPrice}
+                {plan.locations.map(location => {
+                  return <Typography variant="body2"
+                component="p"
+                className={classes.content}>
+                    {location.location} : {location.numberOfDays} days, {location.isFlexible ? " flexible" : " not flexible"}
+                  </Typography>
+                })}
               </Typography>
             </CardContent>
           </CardActionArea>
