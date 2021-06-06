@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => (
             margin: theme.spacing(8, 4),
             textAlign: "left",
         },
+        menu: {
+            padding: theme.spacing(8, 4),
+        },
         title: {
             alignItems: 'center',
             flexDirection: 'column',
@@ -34,6 +37,12 @@ export default function PlanDetails(props) {
     const { state } = props.location;
     const plans = state;
     const preventDefault = (event) => event.preventDefault();
+    const [planIndex, setPlanIndex] = useState(0);
+
+    const updatePlan = (i) => {
+        setPlan(plans[i])
+        setPlanIndex(i)
+    }
 
     const [plan, setPlan] = useState(plans[0]);
     console.log(plan)
@@ -42,6 +51,19 @@ export default function PlanDetails(props) {
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
             <Grid item xs={6} className={classes.paper} square>
+                {
+                    plans.size > 1 ?
+                        plans.map((p, i) =>
+                            <Grid component="main" className={classes.menu} item xs={1}>
+
+                                <div>
+                                    <Grid >
+                                        <Button onClick={() => updatePlan(i)} variant="contained" color="secondary">Plan {i + 1}#</Button>
+                                    </Grid>
+                                    <br></br>
+                                </div>
+                            </Grid>
+                        ) : null}
                 <div component="main" maxWidth="xs">
                     <div className={classes.root}>
                         <div>
@@ -63,20 +85,20 @@ export default function PlanDetails(props) {
                                 justify="space-between"
                                 spacing={3}
                             >
-                                                         <Grid item
-                                        container
-                                        direction="row"
-                                        justify="space-between"
-                                        alignItems="stretch"
-                                    >
-                                        <Grid item xs={2}>rate</Grid>
-                                        <Grid item xs={1}>link</Grid>
-                                        <Grid item xs={2}><Typography>hotel</Typography></Grid>
-                                        <Grid item xs={2}><Typography>city</Typography></Grid>
-                                        <Grid item xs={2}><Typography>check in</Typography></Grid>
-                                        <Grid item xs={2}><Typography>check out</Typography></Grid>
-                                        <Grid item xs={1}><Typography>price</Typography></Grid>
-                                    </Grid>
+                                <Grid item
+                                    container
+                                    direction="row"
+                                    justify="space-between"
+                                    alignItems="stretch"
+                                >
+                                    <Grid item xs={2}>rate</Grid>
+                                    <Grid item xs={1}>link</Grid>
+                                    <Grid item xs={2}><Typography>hotel</Typography></Grid>
+                                    <Grid item xs={2}><Typography>city</Typography></Grid>
+                                    <Grid item xs={2}><Typography>check in</Typography></Grid>
+                                    <Grid item xs={2}><Typography>check out</Typography></Grid>
+                                    <Grid item xs={1}><Typography>price</Typography></Grid>
+                                </Grid>
                                 {plan.path ? plan.path.map(section =>
                                     <Grid item
                                         container
@@ -86,7 +108,7 @@ export default function PlanDetails(props) {
                                     >
                                         <Grid item xs={2}><Rating size="small" name="read-only" value={section.star} readOnly /></Grid>
                                         <Grid item xs={1}>
-                                            <Link href={section.link} onClick={preventDefault}><img src={hotelIcon} className={classes.hotelIcon}></img></Link>
+                                            <Link href={"www.booking.com\\" + section.link} onClick={preventDefault}><img src={hotelIcon} className={classes.hotelIcon}></img></Link>
                                         </Grid>
                                         <Grid item xs={2}><Typography>{section.name}</Typography></Grid>
                                         <Grid item xs={2}><Typography>{section.locationName}</Typography></Grid>
