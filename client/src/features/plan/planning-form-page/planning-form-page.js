@@ -19,14 +19,32 @@ const useStyles = makeStyles({
   },
 });
 
-export default function PlanningFormPage() {
+export default function PlanningFormPage(props) {
   const classes = useStyles();
+
+  const { state: search } = props.location;
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [locations, setLocations] = useState([]);
   const [numberOfTravelers, setNumberOfTravelers] = useState(1);
   const [error, setError] = useState(null);
+
+  if(search) {
+    const {startDate,endDate,locations,numberOfTravelers} = search;
+    // if(startDate) {
+    //   setStartDate(startDate)
+    // }
+    // if(endDate) {
+    //   setEndDate(endDate)
+    // }
+    if(numberOfTravelers) {
+      setNumberOfTravelers(numberOfTravelers)
+    }
+    // if(locations) {
+    //   setLocations(locations)
+    // }
+  }
 
   const history = useHistory();
 
@@ -61,7 +79,7 @@ export default function PlanningFormPage() {
     }
 
     axios
-      .post(serverUrls.plan, planData)
+      .post(serverUrls.plan, planData, {headers: {"numOfResults": 3}})
       .then((response) => {
         const plans = response.data.data;
 
@@ -81,7 +99,7 @@ export default function PlanningFormPage() {
 
   const locationsTable = (locations) =>
   (
-    <TableContainer component={Paper} className={classes.table}>
+    <TableContainer key={1} component={Paper} className={classes.table}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>

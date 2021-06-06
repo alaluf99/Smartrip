@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => (
             textAlign: "left",
         },
         menu: {
-            padding: theme.spacing(8, 4),
+            padding: theme.spacing(2, 4),
         },
         title: {
             alignItems: 'center',
@@ -49,15 +49,13 @@ export default function PlanDetails(props) {
 
     return (
         <Grid container component="main" className={classes.root}>
-            <CssBaseline />
-            <Grid item xs={6} className={classes.paper} square>
+            <Grid container item xs={6} justify="center" className={classes.paper} square>
                 {
-                    plans.size > 1 ?
+                    plans.length > 1 ?
                         plans.map((p, i) =>
-                            <Grid component="main" className={classes.menu} item xs={1}>
-
+                            <Grid className={classes.menu}>
                                 <div>
-                                    <Grid >
+                                    <Grid item>
                                         <Button onClick={() => updatePlan(i)} variant="contained" color="secondary">Plan {i + 1}#</Button>
                                     </Grid>
                                     <br></br>
@@ -72,7 +70,7 @@ export default function PlanDetails(props) {
                                     {plan.startDate} - {plan.endDate}
                                 </Typography>
                                 <Typography gutterBottom variant="h5" component="h2">
-                                    Plan suggestion
+                                    Plan suggestion {planIndex + 1}#
                     </Typography>
                             </div>
                             <Typography variant="h6">General info</Typography>

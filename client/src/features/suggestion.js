@@ -26,12 +26,12 @@ export default function Suggestion(props) {
     const history = useHistory();
 
     const { plan } = props;
-  
+
     const handleMoreInfo = () => {
-      history.push({
-        pathname: '/plandetails',
-        state: [plan]
-      });
+        history.push({
+            pathname: '/plandetails',
+            state: [plan]
+        });
     }
 
     const calcNumberOfDays = (start, end) => {
@@ -50,7 +50,7 @@ export default function Suggestion(props) {
                 {plan.path.map(place => <Typography variant="subtitle1" className={classes.content}>{place.locationName} {calcNumberOfDays(place.checkIn, place.checkOut)} days</Typography>)}
                 <br></br>
                 <Button variant="contained" color="default" onClick={handleMoreInfo}>
-                    More Info
+                    Continue Searching
 </Button>
             </CardContent>
         </CardActionArea>

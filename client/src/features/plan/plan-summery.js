@@ -49,36 +49,38 @@ export default function PlanSummery(props) {
   const classes = useStyles();
   const history = useHistory();
 
-  const { plan } = props;
+  const { plan: search } = props;
 
-  const handleMoreInfo = () => {
+  const handleContinueSearch = () => {
     history.push({
-      pathname: '/plandetails',
-      state: [plan]
+      pathname: '/planning',
+      state: search
     });
   }
 
+  const image = "https://source.unsplash.com/collection/1075959/1600x900";
+
   return (
     <Grid item xs={4}>
-        <Card key={plan.planId} className={classes.card}>
+        <Card key={search.planId} className={classes.card}>
           <CardActionArea>
             <CardMedia
               className={classes.media}
-              image={newYorkImage}
+              image={image}
               title="Contemplative Reptile"
             />
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                {plan.startDate} - {plan.endDate}
+                {search.startDate} - {search.endDate}
               </Typography>
               <Typography
                 variant="body2"
                 component="p"
                 className={classes.content}
               >
-                number of poeple: {plan.people}
+                number of poeple: {search.people}
                 <br />
-                {plan.locations.map(location => {
+                {search.locations.map(location => {
                   return <Typography variant="body2"
                 component="p"
                 className={classes.content}>
@@ -90,8 +92,8 @@ export default function PlanSummery(props) {
           </CardActionArea>
           <Divider className={classes.divider} light />
           <CardActions>
-            <Button size="small" color="primary" onClick={handleMoreInfo}>
-              More info
+            <Button size="small" color="primary" onClick={handleContinueSearch}>
+              Continue Searching
               </Button>
           </CardActions>
         </Card>
