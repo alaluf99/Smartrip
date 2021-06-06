@@ -24,6 +24,7 @@
     "final-form-material-ui": "0.3.0",
     "google-map-react": "^2.1.9",
     "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
     "material-ui": "^0.20.2",
     "react": "^17.0.1",
     "react-bingmaps": "^3.6.1",

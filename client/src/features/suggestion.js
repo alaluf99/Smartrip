@@ -5,6 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import React from "react";
 import { useHistory } from 'react-router';
+import chain from "lodash";
+import sumBy from "lodash";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,13 +43,38 @@ export default function Suggestion(props) {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays
     }
+
+    const getDaysNum = (list) => {
+        if (list) {
+            console.log(list)
+            let sum = 0;
+            list.forEach(l => {
+                sum += l.days
+            });
+            return sum;
+        }
+
+    }
+
+    const data = plan.path.map(place => { return { name: place.locationName, days: calcNumberOfDays(place.checkIn, place.checkOut) } })
+
+    var result = [];
+    data.reduce(function (res, value) {
+        if (!res[value.name]) {
+            res[value.name] = { name: value.name, days: 0 };
+            result.push(res[value.name])
+        }
+        res[value.name].days += value.days;
+        return res;
+    }, {});
+
     return (<Card className={classes.card} item xs={12} md={6} lg={4}>
         <CardActionArea>
             <CardContent >
                 <Typography color="textSecondary" gutterBottom>
                     {plan.startDate} - {plan.endDate}
                 </Typography>
-                {plan.path.map(place => <Typography variant="subtitle1" className={classes.content}>{place.locationName} {calcNumberOfDays(place.checkIn, place.checkOut)} days</Typography>)}
+                {result.map(place => <Typography variant="subtitle1" className={classes.content}>{place.name} {place.days} days</Typography>)}
                 <br></br>
                 <Button variant="contained" color="default" onClick={handleMoreInfo}>
                     More Info
