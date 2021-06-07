@@ -49,7 +49,15 @@ export default function PlanSummery(props) {
   const classes = useStyles();
   const history = useHistory();
 
-  const { plan: search } = props;
+  const { plan: search, index } = props;
+
+  const getImage = () => {
+    return `https://source.unsplash.com/collection/1075959/1600x900?sig=${index}`;
+  }
+
+  const getRandomNumber = () => {
+    return (Math.floor(Math.random() * 50));
+  }
 
   const handleContinueSearch = () => {
     history.push({
@@ -58,45 +66,44 @@ export default function PlanSummery(props) {
     });
   }
 
-  const image = "https://source.unsplash.com/collection/1075959/1600x900";
 
   return (
     <Grid item xs={4}>
-        <Card key={search.planId} className={classes.card}>
-          <CardActionArea>
-            <CardMedia
-              className={classes.media}
-              image={image}
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {search.startDate} - {search.endDate}
-              </Typography>
-              <Typography
-                variant="body2"
-                component="p"
-                className={classes.content}
-              >
-                number of poeple: {search.people}
-                <br />
-                {search.locations.map(location => {
-                  return <Typography variant="body2"
-                component="p"
-                className={classes.content}>
-                    {location.location} : {location.numberOfDays} days, {location.isFlexible ? " flexible" : " not flexible"}
-                  </Typography>
-                })}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <Divider className={classes.divider} light />
-          <CardActions>
-            <Button size="small" color="primary" onClick={handleContinueSearch}>
-              Continue Searching
+      <Card key={search.planId} className={classes.card}>
+        <CardActionArea>
+          <CardMedia
+            className={classes.media}
+            image={getImage()}
+            title="Contemplative Reptile"
+          />
+          <CardContent>
+            <Typography color="textSecondary" gutterBottom>
+              {search.startDate} - {search.endDate}
+            </Typography>
+            <Typography
+              variant="body2"
+              component="p"
+              className={classes.content}
+            >
+              number of poeple: {search.people}
+              <br />
+              {search.locations.map(location => {
+                return <Typography variant="body2"
+                  component="p"
+                  className={classes.content}>
+                  {location.location} : {location.numberOfDays} days, {location.isFlexible ? " flexible" : " not flexible"}
+                </Typography>
+              })}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <Divider className={classes.divider} light />
+        <CardActions>
+          <Button size="small" color="primary" onClick={handleContinueSearch}>
+            Continue Searching
               </Button>
-          </CardActions>
-        </Card>
+        </CardActions>
+      </Card>
     </Grid>
   );
 }

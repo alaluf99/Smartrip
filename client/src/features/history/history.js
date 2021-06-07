@@ -42,7 +42,7 @@ export default function History() {
         <br/>
         <Grid container spacing={3} direction="row" justify="center" alignItems="center">
           {
-            plansHistory.map((plan) => { return <PlanSummery plan={plan} /> })
+            plansHistory.map((plan, i) => { return <PlanSummery index={i} plan={plan} /> })
           }
         </Grid>
       </div>
