@@ -147,7 +147,9 @@ const HotelsBL = {
                       // to the hotel in the afternoon)
                     else if(((firstDate.notFlexIndex == null) && (secondDate.notFlexIndex == null)) ||
                             ((firstDate.notFlexIndex == null) && (secondDate.notFlexIndex != null) && 
-                             (datesBetween[j - 1].notFlexIndex == null))) {
+                             (datesBetween[j - 1].notFlexIndex == null)) || 
+                             ((firstDate.notFlexIndex != null) && (secondDate.notFlexIndex == null) && 
+                             (datesBetween[i + 1].notFlexIndex == null))) {
                         // calculating the nights between the dates to see if a location is more nights then needed
                         var nightsBetween = Math.ceil((Math.abs(secondDate.date.getTime() - firstDate.date.getTime())) / (1000 * 3600 * 24));
                         
@@ -238,10 +240,18 @@ const HotelsBL = {
 
         for (let loc of locations) {
             if (loc.isFlexible) {
-                daysForLocations[loc.location] = loc.numberOfDays
+                if (daysForLocations[loc.location] != null) {
+                    daysForLocations[loc.location] += loc.numberOfDays
+                } else {
+                    daysForLocations[loc.location] = loc.numberOfDays
+                }
             } else {
-                daysForLocations[loc.location] = 
-                    Math.ceil((Math.abs((new Date(loc.startDate)).getTime() - (new Date(loc.endDate)).getTime())) / (1000 * 3600 * 24));
+                let days = Math.ceil((Math.abs((new Date(loc.startDate)).getTime() - (new Date(loc.endDate)).getTime())) / (1000 * 3600 * 24));
+                if (daysForLocations[loc.location] != null) {
+                    daysForLocations[loc.location] += days;
+                } else {
+                    daysForLocations[loc.location] = days;
+                }
             }
         }
 
@@ -364,7 +374,10 @@ const HotelsBL = {
             if (currNode == "startNode") {
                 let edges = graph.outEdges(currNode)
                 for (let ed of edges) {
-                    this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), Object.assign({}, path),
+                    let nextPath = Object.assign({}, path);
+                    nextPath.path = Object.assign([], nextPath.path);
+
+                    this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), nextPath,
                         Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, topResults, graph, locationsRequest, numOfResults);
                 }
             } else {
@@ -401,7 +414,7 @@ const HotelsBL = {
                     if ((topResults.size() < numOfResults) || (path.totalPrice <= parseInt(topResults.min()) && topResults.size() == numOfResults)) {
                         let edges = graph.outEdges(currNode)
                         for (let ed of edges) {
-                            var nextPath = Object.assign({}, path);
+                            let nextPath = Object.assign({}, path);
                             nextPath.path = Object.assign([], nextPath.path);
                             this.calculatePathesRecursive(ed.w, currNode, graph.edge(ed), nextPath,
                                 Object.assign([], locations), Object.assign({}, daysInLocations), allValidPathes, pq, topResults, graph, locationsRequest, numOfResults);
