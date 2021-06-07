@@ -1,14 +1,15 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { Button, ButtonGroup, Checkbox, CssBaseline, Grid, makeStyles, Paper, Slider, TableRow, TableContainer, TableHead, Table, TableBody, TableCell, FormControl } from "@material-ui/core";
+import { Button, ButtonGroup, CssBaseline, FormControl, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
+import CloseIcon from '@material-ui/icons/Close';
+import DoneIcon from '@material-ui/icons/Done';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import axios from "axios";
-import React, { useState } from "react";
-import { Form } from "react-final-form";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { serverUrls } from "../../../config/config";
 import AddLocationModal from "./add-location-modal";
-import CloseIcon from '@material-ui/icons/Close';
-import DoneIcon from '@material-ui/icons/Done';
+import RemoveIcon from '@material-ui/icons/Remove';
+import { IconButton } from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -30,21 +31,26 @@ export default function PlanningFormPage(props) {
   const [numberOfTravelers, setNumberOfTravelers] = useState(1);
   const [error, setError] = useState(null);
 
-  if(search) {
-    const {startDate,endDate,locations,numberOfTravelers} = search;
-    // if(startDate) {
-    //   setStartDate(startDate)
-    // }
-    // if(endDate) {
-    //   setEndDate(endDate)
-    // }
-    if(numberOfTravelers) {
-      setNumberOfTravelers(numberOfTravelers)
+  useEffect(() => {
+    if (search) {
+      try {
+        const { startDate, endDate, locations, people } = search;
+        if(startDate) {
+          setStartDate(startDate)
+        }
+        if(endDate) {
+          setEndDate(endDate)
+        }
+        if (people) {
+          setNumberOfTravelers(people)
+        }
+        if(locations) {
+          setLocations(locations)
+        }
+      } catch {}
+
     }
-    // if(locations) {
-    //   setLocations(locations)
-    // }
-  }
+  }, []);
 
   const history = useHistory();
 
@@ -66,10 +72,19 @@ export default function PlanningFormPage(props) {
   }
 
   const addLocation = (newLocation) => {
-    console.log(newLocation)
     setLocations([...locations, newLocation]);
   }
 
+  const removeLocation = (index) => {
+    console.log(index)
+
+    const allLocations = locations;
+    allLocations.splice(index, 1);  
+    console.log(allLocations)
+
+    setLocations([...allLocations]);
+  }
+  
   const onSubmit = async (values) => {
     const planData = {
       startDate: getRequestDateFormat(startDate),
@@ -79,7 +94,7 @@ export default function PlanningFormPage(props) {
     }
 
     axios
-      .post(serverUrls.plan, planData, {headers: {"numOfResults": 3}})
+      .post(serverUrls.plan, planData, { headers: { "numOfResults": 3 } })
       .then((response) => {
         const plans = response.data.data;
 
@@ -97,7 +112,7 @@ export default function PlanningFormPage(props) {
 
   const displayTravelersCounter = numberOfTravelers > 0;
 
-  const locationsTable = (locations) =>
+  const locationsTable = () =>
   (
     <TableContainer key={1} component={Paper} className={classes.table}>
       <Table aria-label="simple table">
@@ -108,16 +123,18 @@ export default function PlanningFormPage(props) {
             <TableCell align="center">number of days</TableCell>
             <TableCell align="center">start date</TableCell>
             <TableCell align="center">end date</TableCell>
+            <TableCell align="center">remove</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {locations.map((loc) => (
+          {locations.map((loc, i) => (
             <TableRow>
               <TableCell align="center">{loc.location}</TableCell>
               <TableCell align="center">{loc.isFlexible ? <DoneIcon></DoneIcon> : <CloseIcon></CloseIcon>}</TableCell>
               <TableCell align="center">{loc.isFlexible ? loc.numberOfDays : '-'}</TableCell>
               <TableCell align="center">{!loc.isFlexible ? getDisplayDateFormat(loc.startDate) : '-'}</TableCell>
               <TableCell align="center">{!loc.isFlexible ? getDisplayDateFormat(loc.endDate) : '-'}</TableCell>
+              <TableCell align="center"><IconButton ><RemoveIcon onClick={() => removeLocation(i)}></RemoveIcon></IconButton></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -143,7 +160,7 @@ export default function PlanningFormPage(props) {
                         disableToolbar
                         name="datee"
                         variant="inline"
-                        format="MM/dd/yyyy"
+                        format="yyyy/dd/MM"
                         id="travel start date"
                         label="travel start date"
                         value={startDate}
@@ -162,7 +179,7 @@ export default function PlanningFormPage(props) {
                         disableToolbar
                         name="datee"
                         variant="inline"
-                        format="MM/dd/yyyy"
+                        format="yyyy/dd/MM"
                         id="travel end date"
                         label="travel end date"
                         value={endDate}

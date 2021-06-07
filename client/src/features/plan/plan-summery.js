@@ -91,7 +91,7 @@ export default function PlanSummery(props) {
                 return <Typography variant="body2"
                   component="p"
                   className={classes.content}>
-                  {location.location} : {location.numberOfDays} days, {location.isFlexible ? " flexible" : " not flexible"}
+                  {location.location} : {location.numberOfDays ? `${location.numberOfDays} days , ` : ""}  {location.isFlexible ? " flexible" : " not flexible"}
                 </Typography>
               })}
             </Typography>

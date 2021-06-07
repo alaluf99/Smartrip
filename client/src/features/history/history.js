@@ -20,6 +20,7 @@ export default function History() {
   const headers = {
     'Authorization': localStorage.FBIdToken
   }
+  
   useEffect(() => {
     axios
       .get(serverUrls.history, {headers})

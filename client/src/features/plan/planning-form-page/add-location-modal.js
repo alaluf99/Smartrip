@@ -89,6 +89,7 @@ export default function AddLocationModal({ onAddLocation }) {
         <Select
           className="basic-single"
           classNamePrefix="select"
+          defaultValue=""
           isClearable={true}
           isSearchable={true}
           name="city"
