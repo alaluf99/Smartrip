@@ -109,7 +109,7 @@ export default function PlanDetails(props) {
                                     >
                                         <Grid item xs={2}><Rating size="small" name="read-only" value={section.star} readOnly /></Grid>
                                         <Grid item xs={1}>
-                                            <a href={"www.booking.com\\" + section.link } target="_blank"><img src={hotelIcon} className={classes.hotelIcon}></img></a>
+                                            <a href={"//www.booking.com//" + section.link } target="_blank"><img src={hotelIcon} className={classes.hotelIcon}></img></a>
                                         </Grid>
                                         <Grid item xs={2}><Typography>{section.name}</Typography></Grid>
                                         <Grid item xs={2}><Typography>{section.locationName}</Typography></Grid>
