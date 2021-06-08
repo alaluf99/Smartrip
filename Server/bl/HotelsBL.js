@@ -119,9 +119,15 @@ const HotelsBL = {
                     
                 for (date of datesBetween) {
                     // if it is a date of other location that isn't flexible then there is no need to check
-                    if (date.notFlexIndex == null) {
-                        if (locationStartDate <= date.date && locationEndDate >= date.date) {
-                            date.notFlexIndex = i;
+                    if (date.notFlexMorningIndex == null) {
+                        if (locationStartDate < date.date && locationEndDate >= date.date) {
+                            date.notFlexMorningIndex = i;
+                        }
+                    }
+
+                    if (date.notFlexNightIndex == null) {
+                        if (locationStartDate <= date.date && locationEndDate > date.date) {
+                            date.notFlexNightIndex = i;
                         }
                     }
                 }
@@ -137,19 +143,24 @@ const HotelsBL = {
 
                     // if there is a mandatory location for those dates (must be the same),
                     // than adding only this location as an option
-                    if ((firstDate.notFlexIndex != null) && (secondDate.notFlexIndex != null) && 
-                        (firstDate.notFlexIndex == secondDate.notFlexIndex)) {
+                    if ((firstDate.notFlexNightIndex != null) && (secondDate.notFlexMorningIndex != null) && 
+                        (firstDate.notFlexNightIndex == secondDate.notFlexMorningIndex)) {
                         datesPairs.push({checkIn: firstDate.date.toISOString().split("T")[0],
                                      checkOut: secondDate.date.toISOString().split("T")[0],
-                                     location: notflexibleLocations[firstDate.notFlexIndex].location})
+                                     location: notflexibleLocations[firstDate.notFlexNightIndex].location})
+                    } 
+                    else if ((firstDate.notFlexMorningIndex != null) && (secondDate.notFlexNightIndex != null) && 
+                                (datesBetween[i].notFlexMorningIndex != datesBetween[i].notFlexNightIndex) &&
+                                (datesBetween[j].notFlexMorningIndex == datesBetween[j - 1].notFlexNightIndex) &&
+                                (datesBetween[j].notFlexMorningIndex != null)) {
+                            
+                            datesPairs.push({checkIn: firstDate.date.toISOString().split("T")[0],
+                            checkOut: secondDate.date.toISOString().split("T")[0],
+                            location: notflexibleLocations[secondDate.notFlexMorningIndex].location})
                     } // else, if both the dates not mandatory for a location, or the second date is
                       // the first date of a mandatory date for location (because we leave in the morning and get
                       // to the hotel in the afternoon)
-                    else if(((firstDate.notFlexIndex == null) && (secondDate.notFlexIndex == null)) ||
-                            ((firstDate.notFlexIndex == null) && (secondDate.notFlexIndex != null) && 
-                             (datesBetween[j - 1].notFlexIndex == null)) || 
-                             ((firstDate.notFlexIndex != null) && (secondDate.notFlexIndex == null) && 
-                             (datesBetween[i + 1].notFlexIndex == null))) {
+                    else if((firstDate.notFlexNightIndex == null) && (secondDate.notFlexMorningIndex == null)) {
                         // calculating the nights between the dates to see if a location is more nights then needed
                         var nightsBetween = Math.ceil((Math.abs(secondDate.date.getTime() - firstDate.date.getTime())) / (1000 * 3600 * 24));
                         
