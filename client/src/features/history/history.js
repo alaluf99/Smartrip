@@ -1,13 +1,11 @@
-import { Container } from "@material-ui/core";
+import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import { getHeaders } from "../../actions/userActions";
 import axios from "../../axios-smartTrip";
 import { serverUrls } from "../../config/config";
-import Error from "../../pages/errorPage/ErrorPage";
+import ErrorPage from "../../pages/errorPage/ErrorPage";
 import LoadingPage from "../../pages/loadingPage/LoadingPage";
 import PlanSummery from "../plan/plan-summery";
-import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -20,7 +18,7 @@ export default function History() {
   const headers = {
     'Authorization': localStorage.FBIdToken
   }
-  
+
   useEffect(() => {
     axios
       .get(serverUrls.history, {headers})
@@ -34,7 +32,7 @@ export default function History() {
       });
   }, []);
 
-  var toReturn = errorLoading ? <Error /> : <LoadingPage />;
+  var toReturn = errorLoading ? <ErrorPage /> : <LoadingPage />;
 
   if (plansHistory) {
     toReturn = (

@@ -8,9 +8,7 @@ import homeBackgroundImage from './../../images/home-background.jpeg';
 import HomeSuggestions from './home-suggestions';
 
 const useStyles = makeStyles((theme) => ({
-    text: {
-        fontFamily: 'Courier New'
-    },
+ 
     homeImage: {
         position: 'relative',
         backgroundColor: theme.palette.grey[800],
@@ -33,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
     root: {
         color: theme.palette.common.white,
         backgroundColor: 'black',
-        fontFamily: 'Courier New'
     },
     mainFeaturedPostContent: {
         position: 'relative',

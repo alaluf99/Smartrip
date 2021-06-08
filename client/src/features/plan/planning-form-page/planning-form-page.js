@@ -10,6 +10,8 @@ import { serverUrls } from "../../../config/config";
 import AddLocationModal from "./add-location-modal";
 import RemoveIcon from '@material-ui/icons/Remove';
 import { IconButton } from '@material-ui/core';
+import ErrorPage from "../../../pages/errorPage/ErrorPage";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles({
   table: {
@@ -18,6 +20,9 @@ const useStyles = makeStyles({
   root: {
     maxWidth: 345,
   },
+  loading: {
+    width: '100%',
+  }
 });
 
 export default function PlanningFormPage(props) {
@@ -29,25 +34,26 @@ export default function PlanningFormPage(props) {
   const [endDate, setEndDate] = useState(new Date());
   const [locations, setLocations] = useState([]);
   const [numberOfTravelers, setNumberOfTravelers] = useState(1);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (search) {
       try {
         const { startDate, endDate, locations, people } = search;
-        if(startDate) {
+        if (startDate) {
           setStartDate(startDate)
         }
-        if(endDate) {
+        if (endDate) {
           setEndDate(endDate)
         }
         if (people) {
           setNumberOfTravelers(people)
         }
-        if(locations) {
+        if (locations) {
           setLocations(locations)
         }
-      } catch {}
+      } catch { }
 
     }
   }, []);
@@ -79,12 +85,12 @@ export default function PlanningFormPage(props) {
     console.log(index)
 
     const allLocations = locations;
-    allLocations.splice(index, 1);  
+    allLocations.splice(index, 1);
     console.log(allLocations)
 
     setLocations([...allLocations]);
   }
-  
+
   const onSubmit = async (values) => {
     const planData = {
       startDate: getRequestDateFormat(startDate),
@@ -93,11 +99,13 @@ export default function PlanningFormPage(props) {
       locations
     }
 
+    setLoading(true);
+
     axios
       .post(serverUrls.plan, planData, { headers: { "numOfResults": 3 } })
       .then((response) => {
         const plans = response.data.data;
-
+        setLoading(false);
         history.push({
           pathname: '/plandetails',
           state: plans
@@ -105,8 +113,8 @@ export default function PlanningFormPage(props) {
       })
       .catch((err) => {
         console.log(err);
-        setError(err)
-        throw err;
+        setLoading(false);
+        setError(true)
       });
   };
 
@@ -142,118 +150,127 @@ export default function PlanningFormPage(props) {
     </TableContainer>
   )
 
+  const errorPage = <ErrorPage message={"An error occurred while calculating your trip"}></ErrorPage>;
+  const loadingPage = <LinearProgress color="secondary" />
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 800 }}>
       <CssBaseline />
-      {error}
-      <FormControl>
-        <Paper style={{ padding: 16 }}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container alignItems="flex-start" direction="column">
-              <Grid container item xs={12}>
-                <Grid item xs={6}>
-                  <Grid item xs={12}>
-                    <h3>Trip dates</h3></Grid>
-                  <Grid container item xs={12}>
-                    <Grid item xs={5}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        name="datee"
-                        variant="inline"
-                        format="yyyy/dd/MM"
-                        id="travel start date"
-                        label="travel start date"
-                        value={startDate}
-                        onChange={(date) => {
-                          setStartDate(date);
-                          console.log("blaaaaa");
-                        }}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                        className="date-picker"
-                      /></Grid>
-                    <Grid item xs={2}></Grid>
-                    <Grid item xs={5}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        name="datee"
-                        variant="inline"
-                        format="yyyy/dd/MM"
-                        id="travel end date"
-                        label="travel end date"
-                        value={endDate}
-                        onChange={(date) => {
-                          setEndDate(date);
-                        }}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                        className="date-picker"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid container item xs={6}>
-                  <Grid item xs={12}><h3>Number of travellers</h3></Grid>
-                  <Grid item xs={12}>
-                    <ButtonGroup
-                      size="small"
-                      className="travelers"
-                      aria-label="small outlined button group"
-                    >
-                      {displayTravelersCounter && (
-                        <Button
-                          onClick={() =>
-                            setNumberOfTravelers(numberOfTravelers - 1)
-                          }
-                        >
-                          -
-                        </Button>
-                      )}
-                      {displayTravelersCounter && (
-                        <Button style={{ backgroundColor: 'transparent' }}>{numberOfTravelers}</Button>
-                      )}
-                      <Button onClick={() => setNumberOfTravelers(numberOfTravelers + 1)}>
-                        +
-                    </Button>
-                    </ButtonGroup></Grid>
+      {
+        (loading) ? loadingPage :
 
-                </Grid>
-              </Grid>
-              <br></br>
-              <Grid container>
-                <Grid item xs={12}>
-                  <h3>Locations</h3>
-                </Grid>
-                <Grid container>
-                  {
-                    locations.length > 0 ?
-                      locationsTable(locations) : ''}
-                </Grid>
-                <Grid container>
-                  <AddLocationModal onAddLocation={addLocation}></AddLocationModal>
-                </Grid>
-              </Grid>
-              <br></br>
-              <Grid>
-                <Grid container>
-                  <Grid className="submit" item xs={12}>
-                    <Button
-                      onClick={onSubmit}
-                      variant="contained"
-                      color="secondary"
-                      type="submit"
-                    >
-                      Submit
+          <FormControl>
+            {
+              (error) ? errorPage :
+                <Paper style={{ padding: 16 }}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container alignItems="flex-start" direction="column">
+                      <Grid container item xs={12}>
+                        <Grid item xs={6}>
+                          <Grid item xs={12}>
+                            <h3>Trip dates</h3></Grid>
+                          <Grid container item xs={12}>
+                            <Grid item xs={5}>
+                              <KeyboardDatePicker
+                                disableToolbar
+                                name="datee"
+                                variant="inline"
+                                format="yyyy/dd/MM"
+                                id="travel start date"
+                                label="travel start date"
+                                value={startDate}
+                                onChange={(date) => {
+                                  setStartDate(date);
+                                  console.log("blaaaaa");
+                                }}
+                                KeyboardButtonProps={{
+                                  "aria-label": "change date",
+                                }}
+                                className="date-picker"
+                              /></Grid>
+                            <Grid item xs={2}></Grid>
+                            <Grid item xs={5}>
+                              <KeyboardDatePicker
+                                disableToolbar
+                                name="datee"
+                                variant="inline"
+                                format="yyyy/dd/MM"
+                                id="travel end date"
+                                label="travel end date"
+                                value={endDate}
+                                onChange={(date) => {
+                                  setEndDate(date);
+                                }}
+                                KeyboardButtonProps={{
+                                  "aria-label": "change date",
+                                }}
+                                className="date-picker"
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid container item xs={6}>
+                          <Grid item xs={12}><h3>Number of travellers</h3></Grid>
+                          <Grid item xs={12}>
+                            <ButtonGroup
+                              size="small"
+                              className="travelers"
+                              aria-label="small outlined button group"
+                            >
+                              {displayTravelersCounter && (
+                                <Button
+                                  onClick={() =>
+                                    setNumberOfTravelers(numberOfTravelers - 1)
+                                  }
+                                >
+                                  -
+                                </Button>
+                              )}
+                              {displayTravelersCounter && (
+                                <Button style={{ backgroundColor: 'transparent' }}>{numberOfTravelers}</Button>
+                              )}
+                              <Button onClick={() => setNumberOfTravelers(numberOfTravelers + 1)}>
+                                +
+                    </Button>
+                            </ButtonGroup></Grid>
+
+                        </Grid>
+                      </Grid>
+                      <br></br>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <h3>Locations</h3>
+                        </Grid>
+                        <Grid container>
+                          {
+                            locations.length > 0 ?
+                              locationsTable(locations) : ''}
+                        </Grid>
+                        <Grid container>
+                          <AddLocationModal onAddLocation={addLocation}></AddLocationModal>
+                        </Grid>
+                      </Grid>
+                      <br></br>
+                      <Grid>
+                        <Grid container>
+                          <Grid className="submit" item xs={12}>
+                            <Button
+                              onClick={onSubmit}
+                              variant="contained"
+                              color="secondary"
+                              type="submit"
+                            >
+                              Submit
                       </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </MuiPickersUtilsProvider>
-        </Paper>
-      </FormControl>
-    </div>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+                </Paper>
+            }
+
+          </FormControl>
+      }
+    </div >
   );
 }
