@@ -43,8 +43,8 @@ export default function Menu() {
           {isAuthenticated ?
             <>
               <Button color="inherit" href="planning">Planning</Button>
-              <Button color="inherit" href="history">My History</Button>
               <Button color="inherit" href="suggestions">Suggestions</Button>
+              <Button color="inherit" href="history">My History</Button>
               <Button color="inherit" className={classes.logOut} onClick={() => dispatch(logoutUser())}>Log out</Button>
             </>
             :
