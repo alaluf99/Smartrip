@@ -8,7 +8,7 @@ import homeBackgroundImage from './../../images/home-background.jpeg';
 import HomeSuggestions from './home-suggestions';
 
 const useStyles = makeStyles((theme) => ({
- 
+
     homeImage: {
         position: 'relative',
         backgroundColor: theme.palette.grey[800],
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'rgba(0,0,0,.3)',
     },
     root: {
+        fontFamily: "News Cycle",
         color: theme.palette.common.white,
         backgroundColor: 'black',
     },

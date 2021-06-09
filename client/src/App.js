@@ -1,6 +1,12 @@
-import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 import React from "react";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+// Redux
+import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { getUserData, logoutUser } from './actions/userActions';
 import "./App.css";
 import History from "./features/history/history";
 import { Home } from "./features/home/home";
@@ -10,15 +16,10 @@ import PlanningFormPage from "./features/plan/planning-form-page/planning-form-p
 import Suggestions from "./features/plan/suggestions";
 import SignUp from "./features/sign-up/sign-up";
 import Layout from "./hoc/layout/Layout";
-import jwtDecode from 'jwt-decode';
-import AuthRoute from './util/AuthRoute';
-import axios from 'axios';
-
-// Redux
-import { Provider } from 'react-redux';
 import store from './redux/store';
 import { SET_AUTHENTICATED } from './redux/types';
-import { logoutUser, getUserData } from './actions/userActions';
+import AuthRoute from './util/AuthRoute';
+
 
 const token = localStorage.FBIdToken;
 if(token) {
@@ -33,12 +34,18 @@ if(token) {
   }
 }
 
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: "News Cycle, Arial Narrow Bold, sans-serif"
+  }
+});
+
 function App() {
 
   return (
     <Provider store={store}>
       <div className="App">
-        <ThemeProvider>
+        <MuiThemeProvider theme={theme}>
           <Layout>
             <BrowserRouter>
               <Switch>
@@ -52,7 +59,7 @@ function App() {
               </Switch>
             </BrowserRouter>
           </Layout>
-        </ThemeProvider>
+        </MuiThemeProvider >
       </div>
     </Provider>
   );
