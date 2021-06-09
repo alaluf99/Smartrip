@@ -65,22 +65,24 @@ export default function AddLocationModal({ onAddLocation }) {
   };
 
   const addLocation = () => {
-    const newLocation = {
-      location,
-      isFlexible,
-    };
-
-    if (isFlexible) {
-      newLocation.numberOfDays = numberOfDays;
-    } else {
-      newLocation.startDate = getRequestDateFormat(startDate);
-      newLocation.endDate = getRequestDateFormat(endDate);
+    if(location) {
+      const newLocation = {
+        location,
+        isFlexible,
+      };
+  
+      if (isFlexible) {
+        newLocation.numberOfDays = numberOfDays;
+      } else {
+        newLocation.startDate = getRequestDateFormat(startDate);
+        newLocation.endDate = getRequestDateFormat(endDate);
+      }
+  
+      onAddLocation(newLocation);
+      setLocation("");
+      setIsFlexible(true);
+      setNumberOfDays(2);
     }
-
-    onAddLocation(newLocation);
-    setLocation("");
-    setIsFlexible(true);
-    setNumberOfDays(2);
   };
 
   return (
