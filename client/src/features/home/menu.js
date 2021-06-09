@@ -38,7 +38,7 @@ export default function Menu() {
       <AppBar position="static" color='default'>
         <Toolbar>
           <Button href="/">
-            <Typography variant="h4" className={classes.title}>SmartTrip</Typography>
+            <Typography variant="h4" className={classes.title}>Smartrip</Typography>
             </Button>
           {isAuthenticated ?
             <>

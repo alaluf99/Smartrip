@@ -56,10 +56,10 @@ export function Home() {
                         <Grid item md={12}>
                             <div className={classes.mainFeaturedPostContent}>
                                 <Typography className={classes.text} component="h1" variant="h3" color="inherit" gutterBottom>
-                                    SmartTrip
+                                    Smartrip
             </Typography>
                                 <Typography variant="h5" className={classes.text} color="inherit" paragraph>
-                                    Plan vacation in five minutes
+                                    Plan your vacation in five minutes
             </Typography>
                                 <Button variant="outlined" className={classes.text} color="inherit" href="planning">start planning</Button>
                             </div>
