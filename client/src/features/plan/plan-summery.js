@@ -1,16 +1,15 @@
-import { Divider } from "@material-ui/core";
+import { Chip, Divider } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { React } from "react";
 import { useHistory } from "react-router";
-import newYorkImage from "./../../images/newYork.jpg";
-import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
   root: {
@@ -34,6 +33,11 @@ const useStyles = makeStyles({
   content: {
     textAlign: "left",
   },
+  locations: {
+    textAlign: "left",
+    marginTop: 10,
+    marginBottom: 10
+  },
   divider: {
     margin: "3px 0",
   },
@@ -55,10 +59,6 @@ export default function PlanSummery(props) {
     return `https://source.unsplash.com/collection/1075959/1600x900?sig=${index}`;
   }
 
-  const getRandomNumber = () => {
-    return (Math.floor(Math.random() * 50));
-  }
-
   const handleContinueSearch = () => {
     history.push({
       pathname: '/planning',
@@ -66,6 +66,11 @@ export default function PlanSummery(props) {
     });
   }
 
+  const displayIsFlexiable = (isFlexiable) => {
+    return isFlexiable ?
+      <Chip variant="outlined" size="small" label="flexiable" color="primary"/> :
+      <Chip variant="outlined" size="small" label="not flexible" margin="10" />
+  }
 
   return (
     <Grid item xs={4}>
@@ -90,8 +95,8 @@ export default function PlanSummery(props) {
               {search.locations.map(location => {
                 return <Typography variant="body2"
                   component="p"
-                  className={classes.content}>
-                  {location.location} : {location.numberOfDays ? `${location.numberOfDays} days , ` : ""}  {location.isFlexible ? " flexible" : " not flexible"}
+                  className={classes.locations}>
+                  {location.location} : {location.numberOfDays ? `${location.numberOfDays} days` : ""}  {displayIsFlexiable(location.isFlexible)}
                 </Typography>
               })}
             </Typography>
@@ -99,7 +104,7 @@ export default function PlanSummery(props) {
         </CardActionArea>
         <Divider className={classes.divider} light />
         <CardActions>
-          <Button size="small" color="primary" onClick={handleContinueSearch}>
+          <Button size="small" color="secondary" onClick={handleContinueSearch}>
             Continue Searching
               </Button>
         </CardActions>
