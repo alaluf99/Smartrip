@@ -124,7 +124,7 @@ export default function AddLocationModal({ onAddLocation }) {
               disableToolbar
               name="datee"
               variant="inline"
-              format="MM/dd/yyyy"
+              format="yyyy/dd/MM"
               id="travel start date"
               label="travel start date"
               value={startDate}
@@ -141,7 +141,7 @@ export default function AddLocationModal({ onAddLocation }) {
               disableToolbar
               name="datee"
               variant="inline"
-              format="MM/dd/yyyy"
+              format="yyyy/dd/MM"
               margin="normal"
               id="travel end date"
               label="travel end date"
