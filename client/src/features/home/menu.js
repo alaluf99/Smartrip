@@ -20,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  logOut: {
+    position:'relative',
+    left:'65%',
+    color:'red'
+  }
 }),
 );
 
@@ -40,7 +45,7 @@ export default function Menu() {
               <Button color="inherit" href="history">My History</Button>
               <Button color="inherit" href="suggestions">Suggestions</Button>
               <Button color="inherit" href="planning">Planning</Button>
-              <Button color="inherit" onClick={() => dispatch(logoutUser())}>Log out</Button>
+              <Button color="inherit" className={classes.logOut} onClick={() => dispatch(logoutUser())}>Log out</Button>
             </>
             :
             <>
